@@ -1,0 +1,97 @@
+@media screen and (min-width: 300px) {
+  body {
+    background-color: black;
+    background-image: url("../../assets/img/j-retrato-de-cardenal-rafael-360px.jpg");
+    background-repeat: no-repeat;
+    background-position-x: 50%;
+    position: relative;
+    margin: 0;
+    padding: 0;
+  }
+
+  .main-wrapper {
+    width: 90%;
+    margin: auto;
+  }
+
+  .settings {
+    position: absolute;
+    right: 22px;
+    top: 22px;
+    background-image: url("../../assets/svg/settings.svg");
+    background-repeat: no-repeat;
+    width: 34px;
+    height: 34px;
+    cursor: pointer;
+    transition: 0.3s;
+    &:hover {
+      opacity: 0.6;
+    }
+  }
+
+  .main {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+  }
+
+  .logo-main {
+    margin-top: 337px;
+    width: 166px;
+    height: 62px;
+  }
+
+  .button {
+    width: 268px;
+    height: 56px;
+    border-radius: 56px;
+    background-color: transparent;
+    border: 1px solid white;
+    color: white;
+    font-size: 24px;
+    box-sizing: border-box;
+  }
+
+  .button-artist {
+    margin-top: 33px;
+  }
+
+  .button-pictures {
+    margin-top: 20px;
+  }
+
+  .main-footer {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 46px;
+    color: white;
+    font-size: 14px;
+  }
+
+  .footer-name-link {
+    transition: 0.4s;
+    &:hover {
+      opacity: 0.6;
+    }
+  }
+}
+
+@media screen and (min-width: 361px) {
+  body {
+    background-color: black;
+    background-image: url("../../assets/img/j-retrato-de-cardenal-rafael-768px.jpg");
+    background-repeat: no-repeat;
+    background-position-x: 50%;
+  }
+}
+
+@media screen and (min-width: 769px) {
+  body {
+    background-color: black;
+    background-image: url("../../assets/img/j-retrato-de-cardenal-rafael-1440px.jpg");
+    background-repeat: no-repeat;
+    background-position-x: 50%;
+  }
+}
