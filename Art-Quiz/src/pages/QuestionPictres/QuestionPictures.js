@@ -27,8 +27,14 @@ class QuestionPictures {
       let questioinsHTML = `
         <div class="question-picture-wrapper">
             <div class="question-picture">
+                <div class="question-close-modal">
+                    <button class="button-close-modal-menu btn-question-close"></button>
+                    <div class="question-close-modal-text btn-question-close">Do you really want to quit the game?</div>
+                    <button class="button question-close-modal-menu btn-question-close button-controller" data-page="Main">Menu</button>
+                    <button class="button  question-close-modal-category btn-question-close button-controller" data-page="Pictures">Categories</button>
+                </div>
                 <div class="question-picture-header">
-                    <button class="question-close"></button>
+                    <button class="question-close button-controller"></button>
                     <div class="question-picture-header-time"></div>
                 </div>
                 <div class="question-picture-question">Who is the author of this picture?</div>
@@ -39,6 +45,11 @@ class QuestionPictures {
                     <button class="button question-author-button"></button>
                     <button class="button question-author-button"></button>
                 </div>
+                <div class="main-footer">
+                    <a href="https://rs.school/js/" target="blank"><img class="footer-logo" src="./assets/svg/rs_school_js.svg" alt=""></a>
+                    <div class="footer-name">App developer: <a class="footer-name-link" href="https://github.com/Lissaghu" target="blank">Anton Dogadin</a></div>
+                    <div class="footer-year">2021</div>
+                </div>
                 <div class="button-next-wrap">
                     <div class="current-image"></div>
                     <div class="current-name"></div>
@@ -46,21 +57,23 @@ class QuestionPictures {
                     <div class="current-year"></div>
                     <button class="button button-modal-next">Next</button>
                 </div>
-                <div class="overflow"></div>
-                <div class="main-footer">
-                    <a href="https://rs.school/js/" target="blank"><img class="footer-logo" src="./assets/svg/rs_school_js.svg" alt=""></a>
-                    <div class="footer-name">App developer: <a class="footer-name-link" href="https://github.com/Lissaghu" target="blank">Anton Dogadin</a></div>
-                    <div class="footer-year">2021</div>
+                <div class="quiz-modal-end">
+                    <button class="quiz-modal-end-close button-controller quiz-end-main" data-page="Main"></button>
+                    <div class="end-text">Congratulations!</div>
+                    <div class="end-result">8/10</div>
+                    <button class="button modal-button-end-exit button-controller quiz-end-main" data-page="Main">Exit</button>
+                    <button class="button modal-button-end-next button-controller" data-page="Pictures">Next Quiz</button>
                 </div>
+                <div class="overflow"></div>
             </div>
         </div>`
       wrap.innerHTML = questioinsHTML
 
       this.state = state // присваиваем объект Controller
-      console.log(state.setEventListener)
-      //   state.setEventListener() // метод Controller-a для добавления лиснера к кнопкам
+      state.setEventListeners() // метод Controller-a для добавления лиснера к кнопкам
       await this.author.createAuthor(9, event, this.state)
       await this.createImage(9, event)
+      this.modalCloseQuiz()
       this.target(event)
     }
     return event()
@@ -86,10 +99,14 @@ class QuestionPictures {
       img.src = `https://raw.githubusercontent.com/Lissaghu/image-data/master/full/${currentData[oneItemArray]}full.webp`
       imgContainer.append(img)
 
+      let overflow = document.querySelector(".overflow")
+
       // при клике на кнопку Next выводится следующее изображения
       document
         .querySelector(".button-modal-next")
         .addEventListener("click", () => {
+          overflow.classList.remove("overflow-active")
+
           imgContainer.innerHTML = ""
           let img = document.createElement("img")
           img.classList.add("question-picture-img")
@@ -99,8 +116,8 @@ class QuestionPictures {
           imgContainer.append(img)
 
           if (oneItemArray == num) {
-            container.innerHTML = this.renderEndQuiz()
-            this.state.setEventListener()
+            this.state.setEventListeners()
+            this.modalEndQuiz()
           } else {
             oneItemArray++
           }
@@ -133,9 +150,12 @@ class QuestionPictures {
     let trueAnswer = document.createElement("div")
     trueAnswer.classList.add("answer-true")
 
+    let overflow = document.querySelector(".overflow")
+
     //  вешаем лиснер на все кнопки с авторами
     buttonAuthorClick.forEach((item) => {
       item.addEventListener("click", (e) => {
+        overflow.classList.add("overflow-active")
         //  если мы кликаем на кнопку, текст которой равен правильному ответу из массива, то меняем цвет
         if (e.target.innerText == currentAuthor[oneItemArray]) {
           item.classList.add("question-author-button-green")
@@ -166,6 +186,50 @@ class QuestionPictures {
         oneItemArray++
       })
     })
+  }
+
+  modalCloseQuiz() {
+    let buttonClose = document.querySelector(".question-close")
+    let overflow = document.querySelector(".overflow")
+
+    let modalClose = document.querySelector(".question-close-modal")
+    buttonClose.addEventListener("click", () => {
+      overflow.classList.add("overflow-active")
+      modalClose.classList.add("question-close-modal-open")
+    })
+
+    let closeModalMenu = document.querySelectorAll(".btn-question-close")
+    closeModalMenu.forEach((item) => {
+      item.addEventListener("click", () => {
+        overflow.classList.remove("overflow-active")
+        modalClose.classList.remove("question-close-modal-open")
+      })
+    })
+  }
+
+  modalEndQuiz() {
+    let event = async () => {
+      let modalEnd = document.querySelector(".quiz-modal-end")
+      modalEnd.classList.add("quiz-modal-end-open")
+
+      let overflow = document.querySelector(".overflow")
+      overflow.classList.add("overflow-active")
+
+      let buttonMenu = document.querySelectorAll(".quiz-end-main")
+      buttonMenu.forEach((item) => {
+        item.addEventListener("click", () => {
+          modalEnd.classList.remove("quiz-modal-end-open")
+          overflow.classList.remove("overflow-active")
+        })
+      })
+
+      let buttonCategories = document.querySelector(".modal-button-end-next")
+      buttonCategories.addEventListener("click", () => {
+        modalEnd.classList.remove("quiz-modal-end-open")
+        overflow.classList.remove("overflow-active")
+      })
+    }
+    return event()
   }
 }
 

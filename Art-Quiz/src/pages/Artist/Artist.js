@@ -15,9 +15,8 @@ class Artists {
       <div class="categories-pictures-title">Categories</div>
       <div class="pictures-grid"></div>
       <div class="categories-pictures-sidebar">
-          <button class="sidebar-home sidebar-button" data-page="Main">Home</button>
+          <button class="sidebar-home sidebar-button button-controller" data-page="Main">Home</button>
           <button class="sidebar-categories sidebar-button" data-page="Artists">Categories</button>
-          <button class="sidebar-score sidebar-button" data-page="Score">Score</button>
       </div>
     </div>
   </div>`

@@ -25,10 +25,18 @@
     position: absolute;
     top: 30px;
     left: 23px;
+
+    border: none;
+
+    background-color: transparent;
     background-image: url("../../assets/svg/settingsArrow.svg");
     background-repeat: no-repeat;
+    background-size: 10px 20px;
+
     width: 10px;
     height: 20px;
+
+    cursor: pointer;
   }
 
   .settings-name {

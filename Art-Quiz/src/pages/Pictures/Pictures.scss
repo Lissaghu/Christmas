@@ -19,6 +19,7 @@
 
   .pictures-grid {
     display: grid;
+    justify-content: center;
     grid-template-columns: repeat(auto-fit, minmax(100px, 155px));
     grid-column-gap: 18px;
     grid-row-gap: 20px;
