@@ -1,0 +1,101 @@
+@media screen and (min-width: 300px) {
+  .categories-pictures-wrapper {
+    background-color: black;
+    width: 100vw;
+    height: 100vh;
+    position: relative;
+  }
+
+  .main-categories-pictures {
+    margin: auto;
+    width: 91.5vw;
+    height: 100vh;
+    background-color: black;
+    color: white;
+    background-image: url("../../assets/svg/categoriesLogo.svg");
+    background-repeat: no-repeat;
+    background-position: top 22px left;
+  }
+
+  .pictures-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(100px, 155px));
+    grid-column-gap: 18px;
+    grid-row-gap: 20px;
+    padding-bottom: 92px;
+  }
+
+  .pictures-grid-item {
+    max-width: 155px;
+    height: 190px;
+    box-sizing: border-box;
+  }
+
+  .pictures-grid-item-wrap-title {
+    display: flex;
+    justify-content: space-between;
+    width: 100%;
+  }
+
+  .pictures-img-wrap {
+    width: 155px;
+    height: 164px;
+    margin-top: 8px;
+  }
+
+  .pictures-img {
+    max-width: 100%;
+    height: 100%;
+    border-radius: 20px;
+    cursor: pointer;
+  }
+
+  .pictures-count {
+    padding-right: 3px;
+  }
+
+  .categories-pictures-title {
+    font-size: 24px;
+    line-height: 28px;
+    padding: 111px 0 51px;
+  }
+
+  .categories-pictures-sidebar {
+    display: flex;
+    justify-content: space-around;
+    align-items: flex-end;
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    width: 100vw;
+    height: 75px;
+    font-size: 12px;
+    border: 1px solid #ffffff;
+    background-color: black;
+    box-sizing: border-box;
+    border-radius: 20px 20px 0px 0px;
+    border-bottom: none;
+    z-index: 2;
+  }
+
+  .sidebar-button {
+    display: flex;
+    align-items: flex-end;
+    height: 48px;
+    margin-bottom: 13px;
+    background-repeat: no-repeat;
+    background-position: top center;
+    background-color: transparent;
+    color: #ffffff;
+    border: none;
+    box-sizing: border-box;
+  }
+
+  .sidebar-home {
+    background-image: url("../../assets/svg/categoriesHome.svg");
+  }
+
+  .sidebar-categories {
+    background-image: url("../../assets/svg/CategoriesCategories.svg");
+  }
+}
