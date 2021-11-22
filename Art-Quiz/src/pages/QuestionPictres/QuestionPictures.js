@@ -2,7 +2,9 @@ import "./QuestionPictures.scss"
 import Author from "./Author"
 
 const arrayJson = async () => {
-  let res = await fetch("../../components/Images/images.json")
+  let res = await fetch(
+    "https://raw.githubusercontent.com/Lissaghu/image-data/master/images.json"
+  )
   let data = await res.json()
   return data
 }
