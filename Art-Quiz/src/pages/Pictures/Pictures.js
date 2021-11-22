@@ -55,7 +55,9 @@ class Pictures {
     let titleArrayCount = 0 // переменная для перебора массива внутри цикла ниже
 
     let event = async () => {
-      let res = await fetch("../../components/Images/images.json")
+      let res = await fetch(
+        "https://raw.githubusercontent.com/Lissaghu/image-data/master/images.json"
+      )
       let data = await res.json()
 
       for (let elem of data) {
