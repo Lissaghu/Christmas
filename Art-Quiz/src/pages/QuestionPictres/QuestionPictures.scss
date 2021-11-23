@@ -295,7 +295,7 @@
     left: 50%;
     z-index: 4;
 
-    transform: translate(150%, -50%);
+    transform: translate(200%, -50%);
 
     background-color: white;
     border-radius: 20px;
@@ -367,5 +367,36 @@
 
     display: block;
     margin: 23px 14px 0 auto;
+  }
+
+  // точки прогресса во время прохождения викторины--------------
+  .question-picture-progress-dot {
+    position: absolute;
+    z-index: 3;
+    bottom: 230px;
+    left: 50%;
+    transform: translateX(-50%);
+
+    width: 230px;
+  }
+
+  .picture-progress-dot {
+    width: 9px;
+    height: 9px;
+
+    display: inline-block;
+
+    margin-right: 10px;
+
+    border-radius: 50%;
+    background-color: rgb(182, 182, 182);
+  }
+
+  .picture-progress-dot-true {
+    background-color: #5eff99;
+  }
+
+  .picture-progress-dot-false {
+    background-color: #ff5959;
   }
 }

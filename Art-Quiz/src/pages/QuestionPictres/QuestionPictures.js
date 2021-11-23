@@ -36,11 +36,23 @@ class QuestionPictures {
                     <button class="button  question-close-modal-category btn-question-close button-controller" data-page="Pictures">Categories</button>
                 </div>
                 <div class="question-picture-header">
-                    <button class="question-close button-controller"></button>
+                    <button class="question-close"></button>
                     <div class="question-picture-header-time"></div>
                 </div>
                 <div class="question-picture-question">Who is the author of this picture?</div>
                 <div class="question-picture-wrap"></div>
+                <div class="question-picture-progress-dot">
+                    <span class="picture-progress-dot"></span>
+                    <span class="picture-progress-dot"></span>
+                    <span class="picture-progress-dot"></span>
+                    <span class="picture-progress-dot"></span>
+                    <span class="picture-progress-dot"></span>
+                    <span class="picture-progress-dot"></span>
+                    <span class="picture-progress-dot"></span>
+                    <span class="picture-progress-dot"></span>
+                    <span class="picture-progress-dot"></span>
+                    <span class="picture-progress-dot"></span>
+                </div>
                 <div class="question-author-button-wrap">
                     <button class="button question-author-button"></button>
                     <button class="button question-author-button"></button>
@@ -103,7 +115,7 @@ class QuestionPictures {
 
       let overflow = document.querySelector(".overflow")
 
-      // при клике на кнопку Next выводится следующее изображения
+      // при клике на кнопку Next выводится следующее изображение
       document
         .querySelector(".button-modal-next")
         .addEventListener("click", () => {
@@ -149,10 +161,15 @@ class QuestionPictures {
 
     let buttonNextWrap = document.querySelector(".button-next-wrap")
 
+    //  создаём элемент правильного ответа, который высвечивается в модальном окне после ответа
     let trueAnswer = document.createElement("div")
     trueAnswer.classList.add("answer-true")
 
+    //  получаем заливку фона при всплытии модального окна
     let overflow = document.querySelector(".overflow")
+
+    //  получаем все точки прогресса
+    let dots = document.querySelectorAll(".picture-progress-dot")
 
     //  вешаем лиснер на все кнопки с авторами
     buttonAuthorClick.forEach((item) => {
@@ -162,7 +179,9 @@ class QuestionPictures {
         if (e.target.innerText == currentAuthor[oneItemArray]) {
           item.classList.add("question-author-button-green")
           trueAnswer.classList.remove("answer-false")
+          dots[oneItemArray].classList.add("picture-progress-dot-true")
         } else {
+          dots[oneItemArray].classList.add("picture-progress-dot-false")
           trueAnswer.classList.add("answer-false")
           item.classList.add("question-author-button-red")
         }
@@ -210,28 +229,25 @@ class QuestionPictures {
   }
 
   modalEndQuiz() {
-    let event = async () => {
-      let modalEnd = document.querySelector(".quiz-modal-end")
-      modalEnd.classList.add("quiz-modal-end-open")
+    let modalEnd = document.querySelector(".quiz-modal-end")
+    modalEnd.classList.add("quiz-modal-end-open")
 
-      let overflow = document.querySelector(".overflow")
-      overflow.classList.add("overflow-active")
+    let overflow = document.querySelector(".overflow")
+    overflow.classList.add("overflow-active")
 
-      let buttonMenu = document.querySelectorAll(".quiz-end-main")
-      buttonMenu.forEach((item) => {
-        item.addEventListener("click", () => {
-          modalEnd.classList.remove("quiz-modal-end-open")
-          overflow.classList.remove("overflow-active")
-        })
-      })
-
-      let buttonCategories = document.querySelector(".modal-button-end-next")
-      buttonCategories.addEventListener("click", () => {
+    let buttonMenu = document.querySelectorAll(".quiz-end-main")
+    buttonMenu.forEach((item) => {
+      item.addEventListener("click", () => {
         modalEnd.classList.remove("quiz-modal-end-open")
         overflow.classList.remove("overflow-active")
       })
-    }
-    return event()
+    })
+
+    let buttonCategories = document.querySelector(".modal-button-end-next")
+    buttonCategories.addEventListener("click", () => {
+      modalEnd.classList.remove("quiz-modal-end-open")
+      overflow.classList.remove("overflow-active")
+    })
   }
 }
 

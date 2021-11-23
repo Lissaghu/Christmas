@@ -113,7 +113,12 @@ class Pictures {
       this.state.category = +e.target.dataset.category
       this.state.currentPage = new QuestionPictures()
     }
-    this.state.currentPage.render(this.state)
+    let container = document.querySelector(".main-wrapper")
+    container.classList.add("main-wrapper-out")
+    setTimeout(() => {
+      container.classList.remove("main-wrapper-out")
+      this.state.currentPage.render(this.state)
+    }, 500)
   }
 }
 
