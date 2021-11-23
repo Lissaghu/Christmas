@@ -28,6 +28,12 @@ a {
 
 // Preloader styles
 
+.preloader {
+  width: 100%;
+  height: 100%;
+  background-color: black;
+}
+
 .pswp__preloader__icn {
   opacity: 0.75;
   width: 14px;

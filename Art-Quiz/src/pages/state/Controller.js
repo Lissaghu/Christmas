@@ -39,8 +39,13 @@ class Controller {
 
   changePage(e) {
     if (e) this.state.currentPage = getClassRefByName(e.target.dataset.page)
-    this.state.currentPage.render(this)
-    this.setEventListeners()
+    let container = document.querySelector(".main-wrapper")
+    container.classList.add("main-wrapper-out")
+    setTimeout(() => {
+      container.classList.remove("main-wrapper-out")
+      this.state.currentPage.render(this)
+      this.setEventListeners()
+    }, 500)
   }
 }
 
