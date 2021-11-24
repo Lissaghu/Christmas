@@ -3,7 +3,6 @@
     width: 100vw;
     height: 640px;
     background-color: #000;
-    // position: relative;
   }
 
   .question-picture {
@@ -89,15 +88,6 @@
         background-color: #ffbca2;
       }
     }
-  }
-
-  // классы для присвоения кнопкам в случае правильного или не правильного ответа
-  .question-author-button-green {
-    background-color: #6dffa2;
-  }
-
-  .question-author-button-red {
-    background-color: #ff5050;
   }
 
   // модальное окно с правильным ответом

@@ -18,6 +18,8 @@ class QuestionPictures {
   constructor() {
     this.author = new Author()
     this.state
+    this.result
+    this.trueResult
   }
 
   // рендерим страницу с вопросом
@@ -74,7 +76,7 @@ class QuestionPictures {
                 <div class="quiz-modal-end">
                     <button class="quiz-modal-end-close button-controller quiz-end-main" data-page="Main"></button>
                     <div class="end-text">Congratulations!</div>
-                    <div class="end-result">8/10</div>
+                    <div class="end-result"></div>
                     <button class="button modal-button-end-exit button-controller quiz-end-main" data-page="Main">Exit</button>
                     <button class="button modal-button-end-next button-controller" data-page="Pictures">Next Quiz</button>
                 </div>
@@ -84,11 +86,15 @@ class QuestionPictures {
       wrap.innerHTML = questioinsHTML
 
       this.state = state // присваиваем объект Controller
+      // присваиваем объект с результатами
+      this.result = this.state.state.resultAnswer[`${this.state.category}`]
+      // присваиваем объект с положительными результатами
+      this.trueResult = this.state.state.trueAnswer[`${this.state.category}`]
       state.setEventListeners() // метод Controller-a для добавления лиснера к кнопкам
       await this.author.createAuthor(9, event, this.state)
       await this.createImage(9, event)
       this.modalCloseQuiz()
-      this.target(event)
+      this.targetAuthor(event)
     }
     return event()
   }
@@ -140,7 +146,7 @@ class QuestionPictures {
     return event()
   }
 
-  target(e) {
+  targetAuthor(e) {
     //  Данный метод отслеживает клик на определённую кнопку с автором
     let oneItemArray = 0 //  перебираем массив начиная с первого элемента
     let buttonAuthorClick = document.querySelectorAll(".question-author-button")
@@ -176,14 +182,25 @@ class QuestionPictures {
       item.addEventListener("click", (e) => {
         overflow.classList.add("overflow-active")
         //  если мы кликаем на кнопку, текст которой равен правильному ответу из массива, то меняем цвет
+
         if (e.target.innerText == currentAuthor[oneItemArray]) {
-          item.classList.add("question-author-button-green")
+          //  объект с массивами результата ответов
+          this.result.push(true)
+
+          //  в модальном окне ответа зелёный значок с галочкой
           trueAnswer.classList.remove("answer-false")
+
+          // присваиваем зелёный цвет точке прогресса
           dots[oneItemArray].classList.add("picture-progress-dot-true")
         } else {
+          //  объект с массивами результата ответов
+          this.result.push(false)
+
+          // присваиваем красный цвет точке прогресса
           dots[oneItemArray].classList.add("picture-progress-dot-false")
+
+          //  в модальном окне ответа зелёный значок с галочкой
           trueAnswer.classList.add("answer-false")
-          item.classList.add("question-author-button-red")
         }
 
         //  обнуляем элементы для создания карточки
@@ -248,6 +265,21 @@ class QuestionPictures {
       modalEnd.classList.remove("quiz-modal-end-open")
       overflow.classList.remove("overflow-active")
     })
+
+    localStorage.setItem(`${this.state.category}-result`, this.result)
+
+    //  выводим полученный результат в конце раунда
+    let endResult = document.querySelector(".end-result")
+    for (let elem of this.result) {
+      if (elem == true) {
+        this.trueResult.push(elem)
+      }
+    }
+    //  сохраняем в локал сторидж полученный результат по категории в которую сыграли
+    localStorage.setItem(`${this.state.category}`, this.trueResult.length)
+
+    //  выводим результат в конце игры
+    endResult.textContent = `${this.trueResult.length}/10`
   }
 }
 

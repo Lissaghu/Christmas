@@ -18,10 +18,11 @@ const getClassRefByName = (name) => {
 }
 
 class Controller {
-  constructor(currentPage = new Main(), trueAnswer, category) {
+  constructor(currentPage = new Main(), category) {
     this.state = {
       currentPage, //  страница, на которой находимся
-      trueAnswer, //  не реализовано
+      resultAnswer: {},
+      trueAnswer: {}, //  не реализовано
       category //  какую категорию выбрали
     }
   }
