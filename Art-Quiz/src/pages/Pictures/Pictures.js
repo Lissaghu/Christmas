@@ -21,6 +21,8 @@ export const itemTitleArray = [
 class Pictures {
   constructor() {
     this.state
+    this.resultAnswer
+    this.trueAnswer
   }
 
   // рендерим страницу с категориями
@@ -43,6 +45,8 @@ class Pictures {
       wrap.innerHTML = currentPage
 
       this.state = state
+      this.resultAnswer = state.state.resultAnswer
+      this.trueAnswer = state.state.trueAnswer
       await this.createCategoryCard(12, 10, 0) //  передаём количество категорий, вопросов и с какого элемента начинаем итерацию
       this.setEventListeners() // Вызываем лиснеры
     }
@@ -112,6 +116,8 @@ class Pictures {
     if (e.target.dataset.category) {
       this.state.category = +e.target.dataset.category
       this.state.currentPage = new QuestionPictures()
+      this.getResultAnswer()
+      this.getTrueAnswer()
     }
     let container = document.querySelector(".main-wrapper")
     container.classList.add("main-wrapper-out")
@@ -119,6 +125,15 @@ class Pictures {
       container.classList.remove("main-wrapper-out")
       this.state.currentPage.render(this.state)
     }, 500)
+  }
+
+  //  данный метод создаёт объект с ответами на категории
+  getResultAnswer() {
+    this.resultAnswer[`${this.state.category}`] = []
+  }
+
+  getTrueAnswer() {
+    this.trueAnswer[`${this.state.category}`] = []
   }
 }
 
