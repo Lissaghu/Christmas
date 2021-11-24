@@ -47,13 +47,21 @@ class ScorePictures {
       //  создаём изображения и присваиваем им соответствующий src
       let img = document.createElement("img")
       img.classList.add("question-picture-img")
-      img.classList.add("score-img")
+
       img.src = `https://raw.githubusercontent.com/Lissaghu/image-data/master/img/${elem}.webp`
       resultContainer.append(img)
     }
 
-    let trueScore = localStorage.getItem(`${this.score}-result`)
-    console.log(trueScore)
+    let trueScore = JSON.parse(localStorage.getItem(`${this.score}-result`))
+    let imgArray = document.querySelectorAll(".question-picture-img")
+
+    for (let i = 0; i < trueScore.length; i++) {
+      imgArray.forEach((item, index) => {
+        if (trueScore[i] == false && i == index) {
+          item.classList.add("score-img")
+        }
+      })
+    }
   }
 }
 

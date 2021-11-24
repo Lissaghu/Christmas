@@ -1,13 +1,13 @@
 @media screen and (min-width: 300px) {
   .question-picture-wrapper {
     width: 100vw;
-    height: 640px;
+    height: 100vh;
     background-color: #000;
   }
 
   .question-picture {
     width: calc(100% - 32px);
-    height: 640px;
+    height: 100vh;
     margin: 0 auto;
     overflow-y: hidden;
   }

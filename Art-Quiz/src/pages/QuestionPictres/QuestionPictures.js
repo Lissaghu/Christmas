@@ -1,5 +1,6 @@
 import "./QuestionPictures.scss"
 import Author from "./Author"
+import Settings from "../Settings/Settings"
 
 const arrayJson = async () => {
   let res = await fetch(
@@ -17,6 +18,7 @@ arrayJson().then((data) => {
 class QuestionPictures {
   constructor() {
     this.author = new Author()
+    this.settings = new Settings()
     this.state
     this.result
     this.trueResult
@@ -138,6 +140,7 @@ class QuestionPictures {
           if (oneItemArray == num) {
             this.state.setEventListeners()
             this.modalEndQuiz()
+            this.settings.soundEndQuiz()
           } else {
             oneItemArray++
           }
@@ -181,9 +184,11 @@ class QuestionPictures {
     buttonAuthorClick.forEach((item) => {
       item.addEventListener("click", (e) => {
         overflow.classList.add("overflow-active")
-        //  если мы кликаем на кнопку, текст которой равен правильному ответу из массива, то меняем цвет
 
+        //  если мы кликаем на кнопку, текст которой равен правильному ответу из массива, то меняем цвет
         if (e.target.innerText == currentAuthor[oneItemArray]) {
+          //  звук правильного ответа
+          this.settings.soundTrueAnswer()
           //  объект с массивами результата ответов
           this.result.push(true)
 
@@ -193,6 +198,8 @@ class QuestionPictures {
           // присваиваем зелёный цвет точке прогресса
           dots[oneItemArray].classList.add("picture-progress-dot-true")
         } else {
+          //  звук не правильного ответа
+          this.settings.soundFalseAnswer()
           //  объект с массивами результата ответов
           this.result.push(false)
 
@@ -266,7 +273,10 @@ class QuestionPictures {
       overflow.classList.remove("overflow-active")
     })
 
-    localStorage.setItem(`${this.state.category}-result`, this.result)
+    localStorage.setItem(
+      `${this.state.category}-result`,
+      JSON.stringify(this.result)
+    )
 
     //  выводим полученный результат в конце раунда
     let endResult = document.querySelector(".end-result")

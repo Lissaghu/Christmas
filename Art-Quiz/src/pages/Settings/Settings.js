@@ -37,41 +37,90 @@ class Settings {
       </div>
     </div>`
     wrap.innerHTML = settingsHTML
+    this.changeVolume()
+  }
+
+  //  звуковая индикация правильного ответа
+  soundTrueAnswer() {
+    let trueAnswer = new Audio("../../assets/audio/trueAnswer.mp3")
+    trueAnswer.play()
+    trueAnswer.volume = +localStorage.getItem("volume-trueAnswer") / 100
+
+    let rangeVolume = document.querySelector(".volume-range")
+
+    rangeVolume.addEventListener("change", function () {
+      if (this.value == this.min) {
+        trueAnswer.volume = 0
+      } else if (this.value == this.max) {
+        trueAnswer.volume = 1
+      }
+    })
+  }
+
+  //  звуковая индикация не правильного ответа
+  soundFalseAnswer() {
+    let falseAnswer = new Audio("../../assets/audio/falseAnswer.mp3")
+    falseAnswer.play()
+    falseAnswer.volume = +localStorage.getItem("volume-trueAnswer") / 100
+
+    let rangeVolume = document.querySelector(".volume-range")
+
+    rangeVolume.addEventListener("change", function () {
+      if (this.value == this.min) {
+        falseAnswer.volume = 0
+      } else if (this.value == this.max) {
+        falseAnswer.volume = 1
+      }
+    })
+  }
+
+  //  звуковая индикация окончания раунда
+  soundEndQuiz() {
+    let endQuiz = new Audio("../../assets/audio/endQuiz.mp3")
+    endQuiz.play()
+    endQuiz.volume = +localStorage.getItem("volume-trueAnswer") / 100
+
+    let rangeVolume = document.querySelector(".volume-range")
+
+    rangeVolume.addEventListener("change", function () {
+      if (this.value == this.min) {
+        endQuiz.volume = 0
+      } else if (this.value == this.max) {
+        endQuiz.volume = 1
+      }
+    })
+  }
+
+  //  изменения громкости звука
+  changeVolume() {
+    let rangeVolume = document.querySelector(".volume-range")
+
+    //  сохраняем изменения инпута громкости в локал
+    let saveButton = document.querySelector(".button-save")
+    saveButton.addEventListener("click", () => {
+      localStorage.setItem("volume-trueAnswer", rangeVolume.value)
+    })
+
+    //  присваиваем значение инпуту из локала
+    rangeVolume.value = +localStorage.getItem("volume-trueAnswer")
+
+    //  кнопки включения и выключения звука
+    let buttonVolumeMax = document.querySelector(".button-volume")
+    buttonVolumeMax.addEventListener("click", () => {
+      rangeVolume.value = 1
+    })
+
+    let buttonVolumeMuted = document.querySelector(".button-mute")
+    buttonVolumeMuted.addEventListener("click", () => {
+      rangeVolume.value = 0
+    })
+
+    //  сброс настроек на дефолтное значение
+    let defaultButton = document.querySelector(".button-default")
+    defaultButton.addEventListener("click", () => {
+      localStorage.setItem("volume-trueAnswer", 0)
+    })
   }
 }
 
 export default Settings
-
-// export const settingsPage = new SettingsPage()
-
-// listenSettingsButton() {
-//   let settingsButton = document.querySelector(".settings")
-
-//   let eventSettingsButton = () => {
-//     this.wrap.classList.add("main-wrapper-out")
-
-//     setTimeout(() => {
-//       this.createSettigsHTML()
-//       this.listenSettingsButtonBack()
-//       this.wrap.classList.remove("main-wrapper-out")
-//     }, 500)
-//   }
-
-//   settingsButton.addEventListener("click", eventSettingsButton)
-// }
-
-// listenSettingsButtonBack() {
-//   let buttonBack = document.querySelector(".settigs-back")
-
-//   buttonBack.addEventListener("click", () => {
-//     this.wrap.classList.add("main-wrapper-out")
-
-//     setTimeout(() => {
-//       this.createMainHTML()
-//       this.createButtonArtist()
-//       this.createButtonPictures()
-//       this.listenSettingsButton()
-//       this.wrap.classList.remove("main-wrapper-out")
-//     }, 500)
-//   })
-// }
