@@ -182,6 +182,7 @@ class QuestionPictures {
       item.addEventListener("click", (e) => {
         overflow.classList.add("overflow-active")
         //  если мы кликаем на кнопку, текст которой равен правильному ответу из массива, то меняем цвет
+
         if (e.target.innerText == currentAuthor[oneItemArray]) {
           //  объект с массивами результата ответов
           this.result.push(true)
@@ -201,6 +202,7 @@ class QuestionPictures {
           //  в модальном окне ответа зелёный значок с галочкой
           trueAnswer.classList.add("answer-false")
         }
+
         //  обнуляем элементы для создания карточки
         currentImageElement.innerHTML = ""
         currentNameElement.innerHTML = ""
@@ -264,6 +266,8 @@ class QuestionPictures {
       overflow.classList.remove("overflow-active")
     })
 
+    localStorage.setItem(`${this.state.category}-result`, this.result)
+
     //  выводим полученный результат в конце раунда
     let endResult = document.querySelector(".end-result")
     for (let elem of this.result) {
@@ -271,6 +275,10 @@ class QuestionPictures {
         this.trueResult.push(elem)
       }
     }
+    //  сохраняем в локал сторидж полученный результат по категории в которую сыграли
+    localStorage.setItem(`${this.state.category}`, this.trueResult.length)
+
+    //  выводим результат в конце игры
     endResult.textContent = `${this.trueResult.length}/10`
   }
 }

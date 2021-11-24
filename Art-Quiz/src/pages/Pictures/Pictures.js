@@ -1,5 +1,6 @@
 import "./Pictures.scss"
 import QuestionPictures from "../QuestionPictres/QuestionPictures"
+import ScorePictures from "../Score/Score"
 
 export const itemTitleArray = [
   // массив тайтлов для карточек, при увеличении количества карточек нужно пополнить массив тайтлов
@@ -20,9 +21,10 @@ export const itemTitleArray = [
 // Класс страницы с категориями
 class Pictures {
   constructor() {
-    this.state
-    this.resultAnswer
-    this.trueAnswer
+    this.state //  передаём конструктор
+    this.resultAnswer //  результаты ответов
+    this.trueAnswer //  правильные результаты ответов
+    this.score //  нужная нам категория по которой выводим score
   }
 
   // рендерим страницу с категориями
@@ -31,7 +33,7 @@ class Pictures {
       // метод для рендера страницы с категориями Pictures
       const wrap = document.querySelector(".main-wrapper")
       wrap.innerHTML = ""
-      let currentPage = `
+      let picturesHTML = `
       <div class="categories-pictures-wrapper">
         <div class="main-categories-pictures">
           <div class="categories-pictures-title">Categories</div>
@@ -42,13 +44,14 @@ class Pictures {
           </div>
         </div>
       </div>`
-      wrap.innerHTML = currentPage
+      wrap.innerHTML = picturesHTML
 
       this.state = state
       this.resultAnswer = state.state.resultAnswer
       this.trueAnswer = state.state.trueAnswer
       await this.createCategoryCard(12, 10, 0) //  передаём количество категорий, вопросов и с какого элемента начинаем итерацию
       this.setEventListeners() // Вызываем лиснеры
+      this.setEventScore()
     }
     return event()
   }
@@ -86,6 +89,9 @@ class Pictures {
 
           let picturesCount = document.createElement("div") // счётчик верных ответов
           picturesCount.classList.add("pictures-count")
+          //  присваиваем значение из локала
+          let local = localStorage.getItem(`${titleArrayCount}`)
+          picturesCount.textContent = local == null ? "" : local + "/10"
           wrapTitle.append(picturesCount)
 
           let picturesWrap = document.createElement("div") // обёртка для картинки
@@ -94,9 +100,22 @@ class Pictures {
 
           let img = document.createElement("img") // сама картинка
           img.src = `https://raw.githubusercontent.com/Lissaghu/image-data/master/img/${elem.imageNum}.webp`
+          if (local != null) {
+            img.classList.add("pictures-img-color")
+          }
           img.classList.add("pictures-img")
           img.setAttribute("data-category", titleArrayCount)
           picturesWrap.append(img)
+
+          let scoreButton = document.createElement("button")
+          scoreButton.textContent = "Score"
+          scoreButton.classList.add("pictures-score-button")
+          if (local != null) {
+            scoreButton.classList.add("pictures-score-button-open")
+          }
+          scoreButton.setAttribute("data-score", titleArrayCount)
+          picturesWrap.append(scoreButton)
+
           titleArrayCount++ // увеличиваем индекс массива с тайтлами на единицу
         }
       }
@@ -134,6 +153,25 @@ class Pictures {
 
   getTrueAnswer() {
     this.trueAnswer[`${this.state.category}`] = []
+  }
+
+  setEventScore() {
+    document.querySelectorAll(".pictures-score-button").forEach((item) => {
+      item.addEventListener("click", () => this.scoreRender(event))
+    })
+  }
+
+  scoreRender(e) {
+    if (e.target.dataset.score) {
+      this.score = +e.target.dataset.score
+      this.state.currentPage = new ScorePictures()
+    }
+    let container = document.querySelector(".main-wrapper")
+    container.classList.add("main-wrapper-out")
+    setTimeout(() => {
+      container.classList.remove("main-wrapper-out")
+      this.state.currentPage.render(this.state, this)
+    }, 500)
   }
 }
 
