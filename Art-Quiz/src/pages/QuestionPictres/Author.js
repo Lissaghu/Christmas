@@ -5,7 +5,7 @@ class Author {
     this.state
   }
 
-  createAuthor(num, e, state) {
+  createAuthor(num, state) {
     let event = async () => {
       //  присваиваем объект Controller
       this.state = state
@@ -13,7 +13,7 @@ class Author {
       let oneItemArray = 0 //  выводим авторов из массива начиная с первого элемента
       let buttonAuthor = document.querySelectorAll(".question-author-button")
 
-      let start = this.state.category * 10 // определяем начало интервала категории в json файле
+      let start = this.state.state.category * 10 // определяем начало интервала категории в json файле
 
       //  получаем массив с нужными нам объектами
       let currentAuthor = imageData.slice(start).map((item) => {

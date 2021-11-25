@@ -25,7 +25,7 @@ class QuestionPictures {
   }
 
   // рендерим страницу с вопросом
-  render(state) {
+  render(state, Pictures) {
     let event = async () => {
       let wrap = document.querySelector(".main-wrapper")
 
@@ -37,7 +37,7 @@ class QuestionPictures {
                     <button class="button-close-modal-menu btn-question-close"></button>
                     <div class="question-close-modal-text btn-question-close">Do you really want to quit the game?</div>
                     <button class="button question-close-modal-menu btn-question-close button-controller" data-page="Main">Menu</button>
-                    <button class="button  question-close-modal-category btn-question-close button-controller" data-page="Pictures">Categories</button>
+                    <button class="button  question-close-modal-category btn-question-close button-controller">Categories</button>
                 </div>
                 <div class="question-picture-header">
                     <button class="question-close"></button>
@@ -80,7 +80,7 @@ class QuestionPictures {
                     <div class="end-text">Congratulations!</div>
                     <div class="end-result"></div>
                     <button class="button modal-button-end-exit button-controller quiz-end-main" data-page="Main">Exit</button>
-                    <button class="button modal-button-end-next button-controller" data-page="Pictures">Next Quiz</button>
+                    <button class="button modal-button-end-next button-controller">Next Quiz</button>
                 </div>
                 <div class="overflow"></div>
             </div>
@@ -89,14 +89,16 @@ class QuestionPictures {
 
       this.state = state // присваиваем объект Controller
       // присваиваем объект с результатами
-      this.result = this.state.state.resultAnswer[`${this.state.category}`]
+      this.result =
+        this.state.state.resultAnswer[`${this.state.state.category}`]
       // присваиваем объект с положительными результатами
-      this.trueResult = this.state.state.trueAnswer[`${this.state.category}`]
+      this.trueResult =
+        this.state.state.trueAnswer[`${this.state.state.category}`]
       state.setEventListeners() // метод Controller-a для добавления лиснера к кнопкам
-      await this.author.createAuthor(9, event, this.state)
-      await this.createImage(9, event)
-      this.modalCloseQuiz()
-      this.targetAuthor(event)
+      await this.author.createAuthor(9, state)
+      await this.createImage(9)
+      this.modalCloseQuiz("Pictures")
+      this.targetAuthor()
     }
     return event()
   }
@@ -105,7 +107,6 @@ class QuestionPictures {
     let event = async () => {
       let oneItemArray = 0 // выводим картинки из массива начиная с первого элемента
 
-      let container = document.querySelector(".main-wrapper")
       let imgContainer = document.querySelector(".question-picture-wrap")
 
       let start = this.state.category * 10 // определяем начало интервала категории в json файле
@@ -139,7 +140,12 @@ class QuestionPictures {
 
           if (oneItemArray == num) {
             this.state.setEventListeners()
-            this.modalEndQuiz()
+            this.modalEndQuiz(
+              this.state.state.category,
+              this.result,
+              this.trueResult,
+              "Pictures"
+            )
             this.settings.soundEndQuiz()
           } else {
             oneItemArray++
@@ -149,12 +155,12 @@ class QuestionPictures {
     return event()
   }
 
-  targetAuthor(e) {
+  targetAuthor() {
     //  Данный метод отслеживает клик на определённую кнопку с автором
     let oneItemArray = 0 //  перебираем массив начиная с первого элемента
     let buttonAuthorClick = document.querySelectorAll(".question-author-button")
 
-    let start = this.state.category * 10
+    let start = this.state.state.category * 10
 
     // получаем нужные массивы из json
     let currentAuthor = imageData.slice(start).map((item) => item.author)
@@ -233,7 +239,13 @@ class QuestionPictures {
     })
   }
 
-  modalCloseQuiz() {
+  modalCloseQuiz(kindOfCategory) {
+    // в зависимости от атрибута будем попадать на категорию художников или картин
+    let buttonCategory = document.querySelector(
+      ".question-close-modal-category"
+    )
+    buttonCategory.setAttribute("data-page", kindOfCategory)
+
     let buttonClose = document.querySelector(".question-close")
     let overflow = document.querySelector(".overflow")
 
@@ -252,7 +264,10 @@ class QuestionPictures {
     })
   }
 
-  modalEndQuiz() {
+  modalEndQuiz(category, result, trueResult, page) {
+    let buttonEndNext = document.querySelector(".modal-button-end-next")
+    buttonEndNext.setAttribute("data-page", page)
+
     let modalEnd = document.querySelector(".quiz-modal-end")
     modalEnd.classList.add("quiz-modal-end-open")
 
@@ -273,23 +288,20 @@ class QuestionPictures {
       overflow.classList.remove("overflow-active")
     })
 
-    localStorage.setItem(
-      `${this.state.category}-result`,
-      JSON.stringify(this.result)
-    )
+    localStorage.setItem(`${category}-result`, JSON.stringify(result))
 
     //  выводим полученный результат в конце раунда
     let endResult = document.querySelector(".end-result")
-    for (let elem of this.result) {
+    for (let elem of result) {
       if (elem == true) {
-        this.trueResult.push(elem)
+        trueResult.push(elem)
       }
     }
     //  сохраняем в локал сторидж полученный результат по категории в которую сыграли
-    localStorage.setItem(`${this.state.category}`, this.trueResult.length)
+    localStorage.setItem(`${category}`, trueResult.length)
 
     //  выводим результат в конце игры
-    endResult.textContent = `${this.trueResult.length}/10`
+    endResult.textContent = `${trueResult.length}/10`
   }
 }
 

@@ -1,16 +1,14 @@
 import "./Score.scss"
 import { imageData } from "../QuestionPictres/QuestionPictures"
 import QuestionPictures from "../QuestionPictres/QuestionPictures"
+import QuestionArtist from "../QuestionArtist/QuestionArtist"
 
 class ScorePictures {
   constructor() {
-    this.state
-    this.pictures
     this.score
-    this.question = new QuestionPictures()
   }
 
-  render(state, pictures) {
+  render(state) {
     let wrap = document.querySelector(".main-wrapper")
 
     let scoreHTML = `
@@ -24,12 +22,10 @@ class ScorePictures {
       </div>`
     wrap.innerHTML = scoreHTML
 
-    //  передаём параметры из класса Controller и Pictures
-    this.state = state
-    this.pictures = pictures
-    this.score = pictures.score
+    //  передаём параметр из класса Controller
+    this.score = state.state.score
 
-    this.state.setEventListeners() //  вешаем лиснеры для перехода по страницым
+    state.setEventListeners() //  вешаем лиснеры для перехода по страницым
     this.renderResult(10) //  num - количество изображений в категории
   }
 

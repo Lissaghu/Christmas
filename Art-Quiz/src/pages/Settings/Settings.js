@@ -1,5 +1,10 @@
 import "./Settings.scss"
 
+//  звуковая индикация ответов и окончания раунда
+let trueAnswer = new Audio("../../assets/audio/trueAnswer.mp3")
+let falseAnswer = new Audio("../../assets/audio/falseAnswer.mp3")
+let endQuiz = new Audio("../../assets/audio/endQuiz.mp3")
+
 class Settings {
   render() {
     const wrap = document.querySelector(".main-wrapper")
@@ -42,58 +47,37 @@ class Settings {
 
   //  звуковая индикация правильного ответа
   soundTrueAnswer() {
-    let trueAnswer = new Audio("../../assets/audio/trueAnswer.mp3")
     trueAnswer.play()
     trueAnswer.volume = +localStorage.getItem("volume-trueAnswer") / 100
-
-    let rangeVolume = document.querySelector(".volume-range")
-
-    rangeVolume.addEventListener("change", function () {
-      if (this.value == this.min) {
-        trueAnswer.volume = 0
-      } else if (this.value == this.max) {
-        trueAnswer.volume = 1
-      }
-    })
   }
 
   //  звуковая индикация не правильного ответа
   soundFalseAnswer() {
-    let falseAnswer = new Audio("../../assets/audio/falseAnswer.mp3")
     falseAnswer.play()
     falseAnswer.volume = +localStorage.getItem("volume-trueAnswer") / 100
-
-    let rangeVolume = document.querySelector(".volume-range")
-
-    rangeVolume.addEventListener("change", function () {
-      if (this.value == this.min) {
-        falseAnswer.volume = 0
-      } else if (this.value == this.max) {
-        falseAnswer.volume = 1
-      }
-    })
   }
 
   //  звуковая индикация окончания раунда
   soundEndQuiz() {
-    let endQuiz = new Audio("../../assets/audio/endQuiz.mp3")
     endQuiz.play()
     endQuiz.volume = +localStorage.getItem("volume-trueAnswer") / 100
-
-    let rangeVolume = document.querySelector(".volume-range")
-
-    rangeVolume.addEventListener("change", function () {
-      if (this.value == this.min) {
-        endQuiz.volume = 0
-      } else if (this.value == this.max) {
-        endQuiz.volume = 1
-      }
-    })
   }
 
   //  изменения громкости звука
   changeVolume() {
     let rangeVolume = document.querySelector(".volume-range")
+
+    rangeVolume.addEventListener("change", function () {
+      if (this.value == this.min) {
+        trueAnswer.volume = 0
+        falseAnswer.volume = 0
+        endQuiz.volume = 0
+      } else if (this.value == this.max) {
+        trueAnswer.volume = 1
+        falseAnswer.volume = 1
+        endQuiz.volume = 1
+      }
+    })
 
     //  сохраняем изменения инпута громкости в локал
     let saveButton = document.querySelector(".button-save")
