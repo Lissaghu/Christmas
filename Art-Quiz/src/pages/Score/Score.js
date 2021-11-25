@@ -1,16 +1,14 @@
 import "./Score.scss"
 import { imageData } from "../QuestionPictres/QuestionPictures"
 import QuestionPictures from "../QuestionPictres/QuestionPictures"
+import QuestionArtist from "../QuestionArtist/QuestionArtist"
 
 class ScorePictures {
   constructor() {
-    this.state
-    this.pictures
     this.score
-    this.question = new QuestionPictures()
   }
 
-  render(state, pictures) {
+  render(state) {
     let wrap = document.querySelector(".main-wrapper")
 
     let scoreHTML = `
@@ -24,12 +22,10 @@ class ScorePictures {
       </div>`
     wrap.innerHTML = scoreHTML
 
-    //  передаём параметры из класса Controller и Pictures
-    this.state = state
-    this.pictures = pictures
-    this.score = pictures.score
+    //  передаём параметр из класса Controller
+    this.score = state.state.score
 
-    this.state.setEventListeners() //  вешаем лиснеры для перехода по страницым
+    state.setEventListeners() //  вешаем лиснеры для перехода по страницым
     this.renderResult(10) //  num - количество изображений в категории
   }
 
@@ -47,13 +43,21 @@ class ScorePictures {
       //  создаём изображения и присваиваем им соответствующий src
       let img = document.createElement("img")
       img.classList.add("question-picture-img")
-      img.classList.add("score-img")
+
       img.src = `https://raw.githubusercontent.com/Lissaghu/image-data/master/img/${elem}.webp`
       resultContainer.append(img)
     }
 
-    let trueScore = localStorage.getItem(`${this.score}-result`)
-    console.log(trueScore)
+    let trueScore = JSON.parse(localStorage.getItem(`${this.score}-result`))
+    let imgArray = document.querySelectorAll(".question-picture-img")
+
+    for (let i = 0; i < trueScore.length; i++) {
+      imgArray.forEach((item, index) => {
+        if (trueScore[i] == false && i == index) {
+          item.classList.add("score-img")
+        }
+      })
+    }
   }
 }
 

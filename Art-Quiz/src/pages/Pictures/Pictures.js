@@ -1,9 +1,22 @@
 import "./Pictures.scss"
 import QuestionPictures from "../QuestionPictres/QuestionPictures"
 import ScorePictures from "../Score/Score"
+import QuestionArtist from "../QuestionArtist/QuestionArtist"
 
 export const itemTitleArray = [
   // массив тайтлов для карточек, при увеличении количества карточек нужно пополнить массив тайтлов
+  "Portrait",
+  "Landscape",
+  "Still Life",
+  "Graphic",
+  "Antique",
+  "Avant-Garde",
+  "Renaissance",
+  "Surrealism",
+  "Kitsch",
+  "Minimalism",
+  "Avangard",
+  "Industrial",
   "Portrait",
   "Landscape",
   "Still Life",
@@ -24,7 +37,6 @@ class Pictures {
     this.state //  передаём конструктор
     this.resultAnswer //  результаты ответов
     this.trueAnswer //  правильные результаты ответов
-    this.score //  нужная нам категория по которой выводим score
   }
 
   // рендерим страницу с категориями
@@ -49,17 +61,19 @@ class Pictures {
       this.state = state
       this.resultAnswer = state.state.resultAnswer
       this.trueAnswer = state.state.trueAnswer
-      await this.createCategoryCard(12, 10, 0) //  передаём количество категорий, вопросов и с какого элемента начинаем итерацию
-      this.setEventListeners() // Вызываем лиснеры
-      this.setEventScore()
+      //  передаём количество категорий, вопросов, с какого элемента
+      //  начинаем итерацию и значение переменной для перебора массива
+      await this.createCategoryCard(12, 10, 0, 0)
+      this.setEventListeners(new QuestionPictures(), this.state) // Вызываем лиснеры
+      this.setEventScore(this.state)
     }
     return event()
   }
 
   // создаём нужное количество категорий
-  createCategoryCard(num, numQuestion, startNum) {
+  createCategoryCard(num, numQuestion, startNum, count) {
     let wrap = document.querySelector(".pictures-grid")
-    let titleArrayCount = 0 // переменная для перебора массива внутри цикла ниже
+    let titleArrayCount = count // переменная для перебора массива внутри цикла ниже
 
     let event = async () => {
       let res = await fetch(
@@ -124,53 +138,57 @@ class Pictures {
   }
 
   // вешаем клик на каждую категорию
-  setEventListeners() {
+  setEventListeners(setKindQuestion, state) {
     document.querySelectorAll("img").forEach((item) => {
-      item.addEventListener("click", () => this.questionRender(event))
+      item.addEventListener("click", () => {
+        this.questionRender(event, setKindQuestion, state)
+      })
     })
   }
 
   // рендерим страницу с вопросами
-  questionRender(e) {
+  questionRender(e, setKindQuestion, state) {
     if (e.target.dataset.category) {
-      this.state.category = +e.target.dataset.category
-      this.state.currentPage = new QuestionPictures()
-      this.getResultAnswer()
-      this.getTrueAnswer()
+      state.state.category = +e.target.dataset.category
+      state.state.currentPage = setKindQuestion
+      this.getResultAnswer(state)
+      this.getTrueAnswer(state)
     }
+
     let container = document.querySelector(".main-wrapper")
     container.classList.add("main-wrapper-out")
     setTimeout(() => {
       container.classList.remove("main-wrapper-out")
-      this.state.currentPage.render(this.state)
+      state.state.currentPage.render(state)
     }, 500)
   }
 
   //  данный метод создаёт объект с ответами на категории
-  getResultAnswer() {
-    this.resultAnswer[`${this.state.category}`] = []
+  getResultAnswer(state) {
+    state.state.resultAnswer[`${state.state.category}`] = []
   }
 
-  getTrueAnswer() {
-    this.trueAnswer[`${this.state.category}`] = []
+  //  данный метод создаёт объект с правильными ответами на категории
+  getTrueAnswer(state) {
+    state.state.trueAnswer[`${state.state.category}`] = []
   }
 
-  setEventScore() {
+  setEventScore(state) {
     document.querySelectorAll(".pictures-score-button").forEach((item) => {
-      item.addEventListener("click", () => this.scoreRender(event))
+      item.addEventListener("click", () => this.scoreRender(event, state))
     })
   }
 
-  scoreRender(e) {
+  scoreRender(e, state) {
     if (e.target.dataset.score) {
-      this.score = +e.target.dataset.score
-      this.state.currentPage = new ScorePictures()
+      state.state.score = +e.target.dataset.score
+      state.state.currentPage = new ScorePictures()
     }
     let container = document.querySelector(".main-wrapper")
     container.classList.add("main-wrapper-out")
     setTimeout(() => {
       container.classList.remove("main-wrapper-out")
-      this.state.currentPage.render(this.state, this)
+      state.state.currentPage.render(state)
     }, 500)
   }
 }

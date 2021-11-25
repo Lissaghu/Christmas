@@ -44,7 +44,7 @@
   }
 
   .logo-main {
-    margin-top: 337px;
+    margin-top: 250px;
     width: 166px;
     height: 62px;
   }
@@ -69,10 +69,15 @@
   }
 
   .main-footer {
+    position: absolute;
+    bottom: 10px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 90%;
     display: flex;
     justify-content: space-between;
     align-items: center;
-    margin-top: 46px;
+    // margin: auto 0 5px;
     color: white;
     font-size: 14px;
   }
