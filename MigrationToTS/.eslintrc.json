@@ -8,13 +8,15 @@
         "dist"
     ],
     "extends": [
-        "airbnb-base",
+        "airbnb",
+        "airbnb-typescript",
         "plugin:prettier/recommended"
     ],
     "parser": "@typescript-eslint/parser",
     "parserOptions": {
         "ecmaVersion": 2021,
-        "sourceType": "module"
+        "sourceType": "module",
+        "project": "./tsconfig.json"
     },
     "plugins": [
         "@typescript-eslint"
