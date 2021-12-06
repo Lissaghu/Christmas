@@ -1,9 +1,7 @@
 import AppLoader from './appLoader'
-import { INews } from '../app/app'
-import { ISources } from '../app/app'
 
 class AppController extends AppLoader {
-  getSources(callback: Function) {
+  getSources(callback): void {
     super.getResp(
       {
         endpoint: 'sources',
