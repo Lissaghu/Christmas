@@ -1,4 +1,4 @@
-import { ILoader, GetRespType, DrawsNewsFunction, SourcesType } from './Models'
+import { ILoader, GetRespType, DrawsNewsFunction, SourcesType, Errors } from './Models'
 
 class Loader implements ILoader {
   constructor(public baseLink: string, public options: SourcesType) {}
@@ -14,7 +14,7 @@ class Loader implements ILoader {
 
   errorHandler(res: Response): Response {
     if (!res.ok) {
-      if (res.status === 401 || res.status === 404)
+      if (res.status === Errors.Unauthorized || res.status === Errors.NotFound)
         console.log(`Sorry, but there is ${res.status} error: ${res.statusText}`)
       throw Error(res.statusText)
     }

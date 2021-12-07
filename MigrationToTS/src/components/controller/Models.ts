@@ -45,3 +45,8 @@ export interface IAppView {
   drawNews: (data: INews) => void
   drawSources: (data: ISources) => void
 }
+
+export enum Errors {
+  NotFound = 404,
+  Unauthorized = 401,
+}
