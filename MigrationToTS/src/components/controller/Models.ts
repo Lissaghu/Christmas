@@ -23,17 +23,22 @@ export interface INews {
 
 export interface ISources {
   status: string
-  sources?: SourcesType[]
+  sources: SourcesType[]
 }
 
 type CallbackFuntion<T> = (data: T) => void
 export type DrawsNewsFunction = CallbackFuntion<INews>
 
+export type GetRespType = {
+  endpoint: string
+  options: { [key: string]: string }
+}
+
 export interface ILoader {
-  getResp: () => void
+  getResp: ({ endpoint, options }: GetRespType, callback: DrawsNewsFunction) => void
   errorHandler: (res: Response) => Response
-  makeUrl: () => string
-  load: () => void
+  makeUrl: (options: SourcesType, endpoint: string) => string
+  load: (method: string, endpoint: string, callback: DrawsNewsFunction, options: SourcesType) => void
 }
 
 export interface IAppView {

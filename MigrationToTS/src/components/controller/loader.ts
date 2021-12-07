@@ -1,14 +1,11 @@
-import { ILoader } from './Models'
+import { ILoader, GetRespType, DrawsNewsFunction, SourcesType } from './Models'
 
 class Loader implements ILoader {
-  constructor(public baseLink: string, public options: object) {
-    this.baseLink = baseLink
-    this.options = options
-  }
+  constructor(public baseLink: string, public options: SourcesType) {}
 
   getResp(
     { endpoint, options = {} }: GetRespType,
-    callback = (): void => {
+    callback: DrawsNewsFunction = (): void => {
       console.error('No callback for GET response')
     }
   ): void {
@@ -25,29 +22,24 @@ class Loader implements ILoader {
     return res
   }
 
-  makeUrl(options, endpoint: string): string {
-    const urlOptions = { ...this.options, ...options }
+  makeUrl(options: SourcesType, endpoint: string): string {
+    const urlOptions: SourcesType = { ...this.options, ...options }
     let url = `${this.baseLink}${endpoint}?`
 
-    Object.keys(urlOptions).forEach((key) => {
+    Object.keys(urlOptions).forEach((key): void => {
       url += `${key}=${urlOptions[key]}&`
     })
 
     return url.slice(0, -1)
   }
 
-  load(method, endpoint, callback, options = {}): void {
+  load(method: string, endpoint: string, callback: DrawsNewsFunction, options: SourcesType = {}): void {
     fetch(this.makeUrl(options, endpoint), { method })
       .then(this.errorHandler)
       .then((res) => res.json())
       .then((data) => callback(data))
       .catch((err) => console.error(err))
   }
-}
-
-type GetRespType = {
-  endpoint: string
-  options?: object
 }
 
 export default Loader

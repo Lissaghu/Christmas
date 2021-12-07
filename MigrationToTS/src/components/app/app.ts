@@ -1,6 +1,6 @@
 import AppController from '../controller/controller'
 import AppView from '../view/appView'
-import { INews, ISources, DrawsNewsFunction } from '../controller/Models'
+import { INews, ISources } from '../controller/Models'
 
 class App {
   private controller

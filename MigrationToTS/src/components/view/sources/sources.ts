@@ -8,7 +8,6 @@ class Sources {
 
     data.forEach((item: SourcesType) => {
       const sourceClone: HTMLTemplateElement = sourceItemTemp?.content?.cloneNode(true) as HTMLTemplateElement
-
       ;(sourceClone.querySelector('.source__item-name') as HTMLTemplateElement).textContent = item.name
 
       sourceClone.querySelector('.source__item')?.setAttribute('data-source-id', item.id)

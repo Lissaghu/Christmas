@@ -1,7 +1,6 @@
 import News from './news/news'
 import Sources from './sources/sources'
-import { ArticlesType, SourcesType, INews, ISources } from '../controller/Models'
-import { IAppView } from '../controller/Models'
+import { ArticlesType, SourcesType, INews, ISources, IAppView } from '../controller/Models'
 
 class AppView implements IAppView {
   private news
@@ -11,12 +10,12 @@ class AppView implements IAppView {
     this.sources = new Sources()
   }
 
-  drawNews(data: INews): void {
+  drawNews(data: Partial<INews>): void {
     const values: ArticlesType[] = data?.articles ? data?.articles : []
     this.news.draw(values)
   }
 
-  drawSources(data: ISources): void {
+  drawSources(data: Partial<ISources>): void {
     const values: SourcesType[] = data?.sources ? data?.sources : []
     this.sources.draw(values)
   }
