@@ -1,7 +1,7 @@
 import './news.css'
-import { ArticlesType } from '../../controller/Models'
+import { ArticlesType, INews } from '../../controller/Models'
 
-class News {
+class News implements INews {
   draw(data: ArticlesType[]): void {
     const news: ArticlesType[] = data.length >= 10 ? data.filter((_item, idx) => idx < 10) : data
 

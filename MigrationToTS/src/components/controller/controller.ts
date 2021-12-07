@@ -1,7 +1,8 @@
 import AppLoader from './appLoader'
+import { DrawsNewsFunction } from './Models'
 
 class AppController extends AppLoader {
-  getSources(callback): void {
+  getSources(callback: DrawsNewsFunction): void {
     super.getResp(
       {
         endpoint: 'sources',
@@ -10,13 +11,13 @@ class AppController extends AppLoader {
     )
   }
 
-  getNews(e: MouseEvent, callback): void {
-    let { target } = e
-    const newsContainer = e.currentTarget
+  getNews(e: MouseEvent, callback: DrawsNewsFunction): void {
+    let target: HTMLElement = e.target as HTMLElement
+    const newsContainer: HTMLDivElement = e.currentTarget as HTMLDivElement
 
     while (target !== newsContainer) {
-      if (target.classList.contains('source__item')) {
-        const sourceId = target.getAttribute('data-source-id')
+      if (target?.classList.contains('source__item')) {
+        const sourceId: string = target?.getAttribute('data-source-id') as string
         if (newsContainer.getAttribute('data-source') !== sourceId) {
           newsContainer.setAttribute('data-source', sourceId)
           super.getResp(
@@ -31,7 +32,7 @@ class AppController extends AppLoader {
         }
         return
       }
-      target = target.parentNode
+      target = target.parentNode as HTMLElement
     }
   }
 }

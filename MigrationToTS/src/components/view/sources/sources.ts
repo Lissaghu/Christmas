@@ -1,7 +1,7 @@
 import './sources.css'
-import { SourcesType } from '../../controller/Models'
+import { SourcesType, ISources } from '../../controller/Models'
 
-class Sources {
+class Sources implements ISources {
   draw(data: SourcesType[]): void {
     const fragment: DocumentFragment = document.createDocumentFragment()
     const sourceItemTemp: HTMLTemplateElement = document.querySelector('#sourceItemTemp') as HTMLTemplateElement

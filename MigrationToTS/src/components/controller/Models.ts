@@ -15,23 +15,23 @@ export type ArticlesType = {
 
 export type SourcesType = { [key: string]: string }
 
-export interface INews {
+export interface GetNews {
   status: string
   totalResults: number
   articles?: ArticlesType[]
 }
 
-export interface ISources {
+export interface GetSources {
   status: string
   sources: SourcesType[]
 }
 
 type CallbackFuntion<T> = (data: T) => void
-export type DrawsNewsFunction = CallbackFuntion<INews>
+export type DrawsNewsFunction = CallbackFuntion<GetNews>
 
 export type GetRespType = {
   endpoint: string
-  options: { [key: string]: string }
+  options?: { [key: string]: string }
 }
 
 export interface ILoader {
@@ -42,11 +42,23 @@ export interface ILoader {
 }
 
 export interface IAppView {
-  drawNews: (data: INews) => void
-  drawSources: (data: ISources) => void
+  drawNews: (data: GetNews) => void
+  drawSources: (data: GetSources) => void
 }
 
 export enum Errors {
   NotFound = 404,
   Unauthorized = 401,
+}
+
+export interface INews {
+  draw: (data: ArticlesType[]) => void
+}
+
+export interface ISources {
+  draw: (data: SourcesType[]) => void
+}
+
+export interface IApp {
+  start: () => void
 }

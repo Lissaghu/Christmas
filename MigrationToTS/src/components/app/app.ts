@@ -1,8 +1,8 @@
 import AppController from '../controller/controller'
 import AppView from '../view/appView'
-import { INews, ISources } from '../controller/Models'
+import { GetNews, GetSources, IApp } from '../controller/Models'
 
-class App {
+class App implements IApp {
   private controller
   private view
 
@@ -14,8 +14,10 @@ class App {
   start(): void {
     document
       .querySelector<HTMLDivElement>('.sources')
-      ?.addEventListener('click', (e) => this.controller.getNews(e, (data: INews) => this.view.drawNews(data)))
-    this.controller.getSources((data: ISources) => this.view.drawSources(data))
+      ?.addEventListener('click', (e) =>
+        this.controller.getNews(e, (data: Partial<GetNews>) => this.view.drawNews(data))
+      )
+    this.controller.getSources((data: Partial<GetSources>) => this.view.drawSources(data))
   }
 }
 
