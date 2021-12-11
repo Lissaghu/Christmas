@@ -1,0 +1,146 @@
+body {
+  margin: 0;
+  background-image: url('./assets/bg.webp');
+  font-family: 'Neucha', cursive;
+}
+
+a {
+  text-decoration: none;
+  color: white;
+}
+
+button {
+  cursor: pointer;
+}
+
+.container {
+  width: 1720px;
+  margin: auto;
+}
+
+.app {
+  display: flex;
+  flex-direction: column;
+
+  width: 100%;
+  height: 100vh;
+
+  color: white;
+}
+
+.header {
+  background-color: #192F2D;
+  width: 100%;
+}
+
+.header__row {
+  display: flex;
+  align-items: center;
+}
+
+.header__row_button_main,
+.header__row_button_toys,
+.header__row_button_tree {
+  text-transform: uppercase;
+  font-size: 28px;
+  font-family: 'Neucha', cursive;
+  color: white;
+
+  border: none;
+  background: transparent;
+  
+  padding-right: 20px;
+
+  transition: 0.4s all ease;
+
+  &:hover .svg_pic{
+    fill: #278D9F;
+  }
+  &:hover {
+    color: #278D9F;
+  }
+}
+
+.main {
+  flex: 1 1 auto;
+}
+
+.main__content {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+
+  height: 80vh;
+}
+
+.main__title {
+  font-size: 53px;
+  line-height: 58px;
+
+  padding: 66px 85px;
+  max-width: 423px;
+  text-align: center;
+
+  border: 2px solid #278D9F;
+  border-radius: 30px;
+
+  background: radial-gradient(118.88% 606.86% at 0% 0%, rgba(36, 197, 219, 0.15) 0%, rgba(36, 197, 219, 0) 100%);
+  backdrop-filter: blur(31px);
+}
+
+.main__button_start {
+  font-size: 24px;
+  line-height: 29px;
+
+  margin-top: 113px;
+  padding: 13px 119px;
+
+  border: 2px solid #278D9F;
+  border-radius: 30px;
+
+  background: radial-gradient(118.88% 606.86% at 0% 0%, rgba(36, 197, 219, 0.15) 0%, rgba(36, 197, 219, 0) 100%);
+  backdrop-filter: blur(31px);
+
+  color: white;
+
+  transition: 0.4s all ease;
+  position: relative;
+  &:hover {
+    background-color: #278D9F;
+  }
+}
+
+.footer {
+  background-color: #192F2D;
+  width: 100%;
+}
+
+.footer__raw {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+
+  width: 100%;
+  height: 100px;
+
+  color: white;
+  font-size: 20px;
+}
+
+.footer__raw_name {
+  transition: 0.4s all ease;
+  &:hover {
+    color: #278D9F;
+  }
+}
+
+.svg_pic {
+  transition: 0.4s all ease;
+}
+
+.footer__raw_rss {
+  &:hover .svg_pic {
+    fill: #278D9F;
+  }
+}
