@@ -1,0 +1,1 @@
+import './Toys.scss'
