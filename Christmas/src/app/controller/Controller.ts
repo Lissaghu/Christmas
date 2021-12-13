@@ -1,22 +1,40 @@
-class Controller {
-  state: State
+import { IController } from "../models/Models"
+import Toys from "../toys/Toys"
+
+
+class Controller implements IController {
+  
+  private state: {[key: string]: string | undefined}
+  private toys
+
   constructor() {
+    this.toys = new Toys()
     this.state = {
-      currentPage: 'toys'
+      currentPage: 'main'
 
     }
   }
 
   init() {
     this.render()
+    this.setEventListener()
+    
   }
 
-  setEventListener() {
-
+  setEventListener(): void {
+    document.querySelectorAll('.button_controller').forEach(item => {
+      item.addEventListener('click', () => this.changePage(event))
+    })
   }
 
-  changePage() {
-
+  changePage(event: Event | undefined): void {
+    this.state.currentPage = (event?.target as HTMLElement).dataset.page
+    this.render()
+    this.setEventListener()
+    
+    if (this.state.currentPage === 'toys') {
+      this.toys.renderToysCard(this)
+    }
   }
 
   render(): void {
@@ -26,7 +44,5 @@ class Controller {
     app.append(currentPageHTML)
   }
 }
-
-type State = { [key: string]: string }
 
 export default Controller

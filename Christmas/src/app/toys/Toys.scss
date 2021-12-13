@@ -1,0 +1,59 @@
+
+// Toys card style ---------------------------
+.main__toys__card {
+  margin-left: 25px;
+
+  display: flex;
+  flex-wrap: wrap;
+
+  column-gap: 30px;
+  row-gap: 30px;
+
+  background-color: #192F2D;
+  max-height: 837px;
+  width: 100%;
+  overflow: auto;
+}
+
+.main__toys__card::-webkit-scrollbar {
+  display: none;
+}
+
+.toys__card_container {
+  display: flex;
+  flex-direction: column;
+
+  padding: 18px 0 19px;
+
+  width: 222px;
+  height: 305px;
+
+  border-radius: 10px;
+  background: radial-gradient(109.56% 109.56% at 0% -2.94%, rgba(255, 255, 255, 0.5) 0%, rgba(179, 246, 255, 0.5) 100%);
+  backdrop-filter: blur(4px);
+}
+
+.toys__card_title {
+  font-size: 18px;
+  padding-left: 16px;
+}
+
+.toys__card_img {
+  width: 104px;
+  height: 106px;
+
+  margin-bottom: 10px;
+
+  align-self: center;
+}
+
+.toys__card_description {
+  padding-left: 16px;
+  margin-bottom: 10px;
+
+  font-size: 14px;
+
+  &:last-child {
+    margin-bottom: 0;
+  }
+}
