@@ -33,7 +33,7 @@ class Controller implements IController {
     this.setEventListener()
     
     if (this.state.currentPage === 'toys') {
-      this.toys.renderToysCard(this)
+      this.toys.initToys(this)
     }
   }
 

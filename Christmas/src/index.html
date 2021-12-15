@@ -61,10 +61,11 @@
     <header class="header__toys">
       <div class="container">
         <div class="header__toys_row">
-          <input class="header__toys_input" type="search">
+          <input class="header__toys_input" type="search" placeholder="Поиск">
           <button class="header__toys_button_menu button_controller" data-page="main">Меню</button>
           <span class="header__toys_title">Игрушки</span>
           <button class="header__toys_button_tree button_controller" data-page="tree">Ёлка</button>
+          <span class="header__toys_like">Любимые игрушки: 0</span>
         </div>
       </div>
     </header>
@@ -75,13 +76,13 @@
 
           <div class="main__toys_settings">
 
-            <div class="main__toys__sort_select">
+            <div class="main__toys__sort">
               <span class="main__toys__sort_select_title">Сортировать</span>
               <select class="main__toys__sort_select">
-                <option selected value="sort-name-max">По названию от «А» до «Я»</option>
-                <option value="sort-name-min">По названию от «Я» до «А»</option>
-                <option value="sort-count-max">По количеству по возрастанию</option>
-                <option value="sort-count-min">По количеству по убыванию</option>
+                <option selected value="start">По названию от «А» до «Я»</option>
+                <option value="end">По названию от «Я» до «А»</option>
+                <option value="max">По количеству по возрастанию</option>
+                <option value="min">По количеству по убыванию</option>
               </select>
             </div>
 
@@ -199,19 +200,7 @@
 
             <button class="main__toys_remove">Сбросить фильтры</button>
           </div>
-          <div class="main__toys__card">
-            <!-- <div class="toys__card_container">
-              <span class="toys__card_title">Большой шар с рисунком Цветок</span>
-              <img class="toys__card_img" src="./assets/toys/1.webp" alt="">
-              <span class="toys__card_description">Количество: 2</span>
-              <span class="toys__card_description">Год покупки: 1960 год</span>
-              <span class="toys__card_description">Форма игрушки: шар</span>
-              <span class="toys__card_description">Цвет игрушки: желтый</span>
-              <span class="toys__card_description">Размер игрушки: большой</span>
-              <span class="toys__card_description">Любимая: нет</span>
-            </div> -->
-
-          </div>
+          <div class="main__toys__card"></div>
         </div>
       </div>
     </main>
