@@ -15,32 +15,61 @@ const dataSort = {
 
 class Toys {
   private rangeSlider = new RangeSlider()
-  private toysState
+  private toysState: {[key: string]: string}
+  private filterObj
 
   constructor(private toys = data) { 
     this.toysState = {
       currentSort: 'start',
-      currentFilter: ''
+      currentFilter: '',
+    }
+    this.filterObj = {
+      shape: {
+        колокольчик: false,
+        шар: false,
+        шишка: false,
+        снежинка: false,
+        фигурка: false
+      },
+      color: {
+        white: false,
+        yellow: false,
+        red: false,
+        blue: false,
+        green: false
+      },
+      size: {
+        big: false,
+        average: false,
+        small: false
+      },
+      // count: {
+      //   start: 1,
+      //   end: 12
+      // },
+      // year: {
+      //   start: 1940,
+      //   end: 2021
+      // }
     }
   }
 
   initToys(state: IController): void {
-    this.renderToysCard()
+    this.filterCard()
+    this.renderToysCard() 
     state.setEventListener()
     this.renderRangeSlider()  
     this.sortCard()
-    this.formFilterCard()
+    this.shapeFilterCard()
   }
 
   renderToysCard(): void {
     let toysCardContainer: HTMLDivElement = document.querySelector('.main__toys__card') as HTMLDivElement
     toysCardContainer.innerHTML = ''
-    
-    this.toys = data 
-                    .sort(dataSort[this.toysState.currentSort])
-                    
 
-    for (let elem of this.toys) {
+    let dataToys = this.toys.sort(dataSort[this.toysState.currentSort])
+                    
+    for (let elem of dataToys) {
       let wrap = document.createElement('div')
       wrap.classList.add('main__toys__card-wrap')
       toysCardContainer.append(wrap)
@@ -68,21 +97,60 @@ class Toys {
   sortCard(): void {
     let select: HTMLSelectElement = document.querySelector('.main__toys__sort_select') as HTMLSelectElement
     select.addEventListener('click', () => {
-      this.toysState.currentSort = select.value
-      this.renderToysCard()
+      if (this.toysState.currentSort === select.value) {
+        return
+      } else {
+        this.toysState.currentSort = select.value
+        this.renderToysCard()
+      } 
     })
   }
 
-  formFilterCard() {
-    let elements = document.querySelector('.main__toys__form')
-    elements?.addEventListener('click', (e) => {
-      if ((e.currentTarget as HTMLElement).className == 'main__toys__form_bell') {
-        console.log('bell')
-      } else {
-        console.log('not bell')
+  filterCard(): void {
+    this.toys = data
+    for (const [key, value] of Object.entries(this.filterObj)) {
+      let toysCardFiltered = []
+      for (const [k, v] of Object.entries(value)) {
+        if (v === true) {
+          toysCardFiltered = toysCardFiltered.concat(
+            this.toys.filter(card => {
+              return card[`${key}`] === k
+            })
+          )
+          
+        }
       }
-    })
+
+      if (toysCardFiltered.length) {
+        this.toys = this.toys.concat(toysCardFiltered)
+        if (this.toys.length !== toysCardFiltered.length) {
+          this.toys = this.toys.filter((item, index) => {
+            return this.toys.indexOf(item) !== index
+          })
+        } 
+      }
+    }
   }
+
+  shapeFilterCard(): void {
+    let elements = document.querySelectorAll('.form')
+    
+    elements.forEach(item => {
+      item.addEventListener('click', (e: Event): void => {
+        let itemClass = document.querySelector(`.${item.className.slice(0, 21)} .main__toys__form_svg`)
+        itemClass?.classList.add('.main__toys__form_svg-active')
+        let filterShape = (e?.currentTarget as HTMLElement).dataset.form as string
+        console.log(filterShape)
+        
+        this.filterObj.shape[filterShape] = true
+        console.log(this.filterObj.shape[filterShape])
+        this.filterCard()
+        this.renderToysCard()
+        console.log(this.toys)
+      })
+    })
+    
+  } 
 
 }
 

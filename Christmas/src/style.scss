@@ -308,8 +308,8 @@ button {
 .main__toys__form_bell,
 .main__toys__form_ball,
 .main__toys__form_pine,
-.main__toys__form_snowflake,
-.main__toys__form_figure {
+.main__toys__form_snow,
+.main__toys__form_figu {
   cursor: pointer;
   transition: 0.4s all ease;
 
@@ -442,6 +442,13 @@ button {
   border-radius: 30px;
 
   backdrop-filter: blur(31px);
+}
+
+.highlight {
+  color: rgb(197, 197, 74);
+  .main__toys__form_svg {
+    fill: rgb(197, 197, 74);
+  }
 }
 
 @media screen and (max-width: 1490px) {
