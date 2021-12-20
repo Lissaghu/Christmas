@@ -3,14 +3,16 @@ import data from '../../data'
 import { IController } from '../models/Models'
 import RangeSlider from './RangeSlider/RangeSlider'
 import SortToys from './SortToys'
+import { noUiSlider } from './RangeSlider/RangeSlider'
+import { Data } from '../models/Models'
 
 const sortToys = new SortToys()
 
 const dataSort = {
   start: sortToys.startName(),
   end: sortToys.endName(),
-  max: sortToys.maxCount(),
-  min: sortToys.minCount()
+  max: sortToys.maxYear(),
+  min: sortToys.minYear()
 }
 
 class Toys {
@@ -18,7 +20,7 @@ class Toys {
   private toysState: {[key: string]: string}
   private filterObj
 
-  constructor(private toys = data) { 
+  constructor(private toys: Data, private rangeToys: Data) { 
     this.toysState = {
       currentSort: 'start',
       currentFilter: '',
@@ -43,14 +45,14 @@ class Toys {
         average: false,
         small: false
       },
-      // count: {
-      //   start: 1,
-      //   end: 12
-      // },
-      // year: {
-      //   start: 1940,
-      //   end: 2021
-      // }
+      count: {
+        start: 1,
+        end: 12
+      },
+      year: {
+        start: 1940,
+        end: 2021
+      }
     }
   }
 
@@ -58,7 +60,7 @@ class Toys {
     this.filterCard()
     this.renderToysCard() 
     state.setEventListener()
-    this.renderRangeSlider()  
+    this.renderRangeSlider(this)  
     this.sortCard()
     this.shapeFilterCard()
   }
@@ -67,12 +69,28 @@ class Toys {
     let toysCardContainer: HTMLDivElement = document.querySelector('.main__toys__card') as HTMLDivElement
     toysCardContainer.innerHTML = ''
 
-    let dataToys = this.toys.sort(dataSort[this.toysState.currentSort])
-                    
-    for (let elem of dataToys) {
+    let toysCard = [...this.toys]
+
+    let copyToysCard: Data = []
+
+    if (this.filterObj.count.start >= 1 || this.filterObj.count.end <= 12) {
+      copyToysCard = toysCard.filter((item: { count: string | number; }) => {
+        return +item.count >= this.filterObj.count.start && +item.count <= this.filterObj.count.end
+      }).sort(dataSort[this.toysState.currentSort])   
+    } 
+
+    if (this.filterObj.year.start >= 1940 || this.filterObj.year.start <= 2021) {
+      copyToysCard = copyToysCard.filter((item: { year: string | number; }) => {
+        return +item.year >= this.filterObj.year.start && +item.year <= this.filterObj.year.end
+      }).sort(dataSort[this.toysState.currentSort])   
+    }
+              
+    for (let elem of copyToysCard) {
       let wrap = document.createElement('div')
       wrap.classList.add('main__toys__card-wrap')
       toysCardContainer.append(wrap)
+
+      let favorite = elem.favorite ? 'да' : 'нет'
 
       let card = `
       <div class="toys__card_container">
@@ -83,15 +101,16 @@ class Toys {
         <span class="toys__card_description">Форма игрушки: ${elem.shape}</span>
         <span class="toys__card_description">Цвет игрушки: ${elem.color}</span>
         <span class="toys__card_description">Размер игрушки: ${elem.size}</span>
-        <span class="toys__card_description">Любимая: нет</span>
+        <span class="toys__card_description">Любимая: ${favorite}</span>
       </div>`
       wrap.innerHTML = card
     }
+    this.toys = toysCard
   }
 
-  renderRangeSlider(): void {
-    this.rangeSlider.renderRangeSliderNumber()
-    this.rangeSlider.renderRangeSliderYear()
+  renderRangeSlider(classToys): void {
+    this.rangeSlider.renderRangeSliderNumber(classToys)
+    this.rangeSlider.renderRangeSliderYear(classToys)
   }
 
   sortCard(): void {
@@ -109,15 +128,15 @@ class Toys {
   filterCard(): void {
     this.toys = data
     for (const [key, value] of Object.entries(this.filterObj)) {
-      let toysCardFiltered = []
+      let toysCardFiltered: Data = []
+
       for (const [k, v] of Object.entries(value)) {
         if (v === true) {
           toysCardFiltered = toysCardFiltered.concat(
             this.toys.filter(card => {
-              return card[`${key}`] === k
+              return card[`${key}`] === k 
             })
           )
-          
         }
       }
 
@@ -137,20 +156,27 @@ class Toys {
     
     elements.forEach(item => {
       item.addEventListener('click', (e: Event): void => {
+
         let itemClass = document.querySelector(`.${item.className.slice(0, 21)} .main__toys__form_svg`)
-        itemClass?.classList.add('.main__toys__form_svg-active')
         let filterShape = (e?.currentTarget as HTMLElement).dataset.form as string
-        console.log(filterShape)
-        
-        this.filterObj.shape[filterShape] = true
-        console.log(this.filterObj.shape[filterShape])
+
+        if (!itemClass?.classList.contains('main__toys__form_svg-active')) {
+          this.filterObj.shape[filterShape] = true
+          itemClass?.classList.add('main__toys__form_svg-active')
+        } 
+        else {
+          this.filterObj.shape[filterShape] = false
+          itemClass?.classList.remove('main__toys__form_svg-active')
+        }
         this.filterCard()
         this.renderToysCard()
-        console.log(this.toys)
       })
-    })
-    
+    }) 
   } 
+
+  countFilterCard() {
+
+  }
 
 }
 

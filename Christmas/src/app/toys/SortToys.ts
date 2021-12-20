@@ -1,5 +1,3 @@
-import data from "../../data";
-
 class SortToys {
   startName() {
     return (a: { name: string; }, b: { name: string; }) => a.name > b.name ? 1 : -1
@@ -9,12 +7,12 @@ class SortToys {
     return (a: { name: string; }, b: { name: string; }) => b.name > a.name ? 1 : -1
   }
 
-  maxCount() {
-    return (a: {count: string}, b: {count: string}) => +b.count - +a.count
+  maxYear() {
+    return (a: {year: string}, b: {year: string}) => +a.year - +b.year
   }
 
-  minCount() {
-    return (a: {count: string}, b: {count: string}) => +a.count - +b.count
+  minYear() {
+    return (a: {year: string}, b: {year: string}) => +b.year - +a.year
   }
 }
 
