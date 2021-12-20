@@ -19,7 +19,7 @@
     "alwaysStrict": true,
     "noFallthroughCasesInSwitch": true,
     "noImplicitThis": true,
-    "strictFunctionTypes": true
+    "strictFunctionTypes": true,
   },
   "exclude": [
     "node_modules",

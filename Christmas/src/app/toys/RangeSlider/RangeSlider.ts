@@ -2,8 +2,8 @@ import 'nouislider/dist/nouislider.css'
 import './RangeSliderYear.scss'
 import './RangeSliderNumber.scss'
 import _default, { target } from "nouislider";
-import data from '../../../data';
-import { IDataItem } from '../../models/Models';
+import { IToys } from '../../models/Models';
+import { ToysType } from '../Toys';
 
 export const noUiSlider = _default;
 
@@ -35,18 +35,9 @@ class RangeSlider {
 
       classToys.filterObj.count.start = +sliderNum[0]
       classToys.filterObj.count.end = +sliderNum[1]
-
-      // let toysCards = [...classToys.toys]
-      
-      // classToys.toys = toysCards.filter((item: { count: string | number; }) => {
-      //   return +item.count >= +sliderNum[0] && +item.count <= +sliderNum[1]
-      // })
       
       classToys.renderToysCard()
-      // classToys.toys = toysCards
-      
     })
-    
   }
 
   renderRangeSliderYear(classToys): void {
@@ -76,14 +67,7 @@ class RangeSlider {
       classToys.filterObj.year.start = +sliderYear[0]
       classToys.filterObj.year.end = +sliderYear[1]
 
-      // let toysCards = [...classToys.toys]
-      
-      // classToys.toys = toysCards.filter((item: { year: string | number; }) => {
-      //   return +item.year >= +sliderNum[0] && +item.year <= +sliderNum[1]
-      // })
-      
       classToys.renderToysCard()
-      // classToys.toys = data
     })
   }
 }

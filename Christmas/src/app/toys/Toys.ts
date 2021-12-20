@@ -1,9 +1,8 @@
 import './Toys.scss'
 import data from '../../data'
-import { IController } from '../models/Models'
+import { IController, Data, IToys } from '../models/Models'
 import RangeSlider from './RangeSlider/RangeSlider'
 import SortToys from './SortToys'
-import { Data } from '../models/Models'
 
 const sortToys = new SortToys()
 
@@ -14,7 +13,9 @@ const dataSort = {
   min: sortToys.minYear()
 }
 
-class Toys {
+export type ToysType = typeof Toys
+
+class Toys implements IToys {
   private rangeSlider = new RangeSlider()
   private toysState: {[key: string]: string}
   private filterObj
@@ -39,10 +40,13 @@ class Toys {
         синий: false,
         зелёный: false
       },
+      favorite: {
+        favorite: false
+      },
       size: {
-        big: false,
-        average: false,
-        small: false
+        большой: false,
+        средний: false,
+        малый: false
       },
       count: {
         start: 1,
@@ -51,7 +55,8 @@ class Toys {
       year: {
         start: 1940,
         end: 2021
-      }
+      },
+      
     }
   }
 
@@ -63,6 +68,8 @@ class Toys {
     this.sortCard()
     this.shapeFilterCard()
     this.colorFilterCard()
+    this.sizeFilterCard()
+    this.favoriteFilterCard()
   }
 
   renderToysCard(): void {
@@ -83,6 +90,18 @@ class Toys {
       copyToysCard = copyToysCard.filter((item: { year: string | number; }) => {
         return +item.year >= this.filterObj.year.start && +item.year <= this.filterObj.year.end
       }).sort(dataSort[this.toysState.currentSort])   
+    }
+    
+    if (this.filterObj.favorite.favorite === true) {
+      copyToysCard = copyToysCard.filter((item : { favorite: boolean})=> {
+        return item.favorite === this.filterObj.favorite.favorite
+      })
+    }
+
+    if ((this.filterObj.size.малый === true)) {
+      copyToysCard = copyToysCard.filter(item => {
+        return item.size === 'малый'
+      })
     }
               
     for (let elem of copyToysCard) {
@@ -108,7 +127,7 @@ class Toys {
     this.toys = toysCard
   }
 
-  renderRangeSlider(classToys): void {
+  renderRangeSlider(classToys: ToysType): void {
     this.rangeSlider.renderRangeSliderNumber(classToys)
     this.rangeSlider.renderRangeSliderYear(classToys)
   }
@@ -130,11 +149,11 @@ class Toys {
     for (const [key, value] of Object.entries(this.filterObj)) {
       let toysCardFiltered: Data = []
 
-      for (const [k, v] of Object.entries(value)) {
-        if (v === true) {
+      for (const [subKey, subValue] of Object.entries(value)) {
+        if (subValue === true) {
           toysCardFiltered = toysCardFiltered.concat(
             this.toys.filter(card => {
-              return card[`${key}`] === k 
+              return card[`${key}`] === subKey 
             })
           )
         }
@@ -180,7 +199,7 @@ class Toys {
     elements.forEach(item => {
       item.addEventListener('input', () => {
 
-        let value = (item as HTMLInputElement).value
+        let value = (item as HTMLInputElement).value 
 
         if ((item as HTMLInputElement).checked) {
           this.filterObj.color[value] = true
@@ -196,9 +215,42 @@ class Toys {
   }
 
   sizeFilterCard(): void {
-    let elements = document.querySelectorAll('.ckbx-size')
+    let elements = document.querySelectorAll('.ckbx-sz-inp')
 
-    
+    elements.forEach(item => {
+      item.addEventListener('input', () => {
+
+        let value = (item as HTMLInputElement).value
+
+        if ((item as HTMLInputElement).checked) {
+          this.filterObj.size[value] = true
+        }
+        else {
+          this.filterObj.size[value] = false
+        }
+        console.log(this.filterObj.size)
+
+        this.filterCard()
+        this.renderToysCard()
+      })
+    })
+  }
+
+  favoriteFilterCard(): void {
+    let element: HTMLInputElement = document.querySelector('.main__toys__like_input') as HTMLInputElement
+
+    element?.addEventListener('input', () => {
+
+      if ((element as HTMLInputElement).checked) {
+        this.filterObj.favorite.favorite = true
+      }
+      else {
+        this.filterObj.favorite.favorite = false
+      }
+
+      this.filterCard()
+      this.renderToysCard()
+    })
   }
 
 }
