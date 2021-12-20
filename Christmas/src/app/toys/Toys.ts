@@ -3,7 +3,6 @@ import data from '../../data'
 import { IController } from '../models/Models'
 import RangeSlider from './RangeSlider/RangeSlider'
 import SortToys from './SortToys'
-import { noUiSlider } from './RangeSlider/RangeSlider'
 import { Data } from '../models/Models'
 
 const sortToys = new SortToys()
@@ -34,11 +33,11 @@ class Toys {
         фигурка: false
       },
       color: {
-        white: false,
-        yellow: false,
-        red: false,
-        blue: false,
-        green: false
+        белый: false,
+        желтый: false,
+        красный: false,
+        синий: false,
+        зелёный: false
       },
       size: {
         big: false,
@@ -63,6 +62,7 @@ class Toys {
     this.renderRangeSlider(this)  
     this.sortCard()
     this.shapeFilterCard()
+    this.colorFilterCard()
   }
 
   renderToysCard(): void {
@@ -158,7 +158,7 @@ class Toys {
       item.addEventListener('click', (e: Event): void => {
 
         let itemClass = document.querySelector(`.${item.className.slice(0, 21)} .main__toys__form_svg`)
-        let filterShape = (e?.currentTarget as HTMLElement).dataset.form as string
+        let filterShape = (e?.currentTarget as HTMLElement).dataset.form 
 
         if (!itemClass?.classList.contains('main__toys__form_svg-active')) {
           this.filterObj.shape[filterShape] = true
@@ -174,8 +174,31 @@ class Toys {
     }) 
   } 
 
-  countFilterCard() {
+  colorFilterCard(): void {
+    let elements = document.querySelectorAll('.ckbx')
 
+    elements.forEach(item => {
+      item.addEventListener('input', () => {
+
+        let value = (item as HTMLInputElement).value
+
+        if ((item as HTMLInputElement).checked) {
+          this.filterObj.color[value] = true
+        }
+        else {
+          this.filterObj.color[value] = false
+        }
+
+        this.filterCard()
+        this.renderToysCard()
+      })
+    })
+  }
+
+  sizeFilterCard(): void {
+    let elements = document.querySelectorAll('.ckbx-size')
+
+    
   }
 
 }
