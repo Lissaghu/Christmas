@@ -21,7 +21,7 @@ export type Data = DataItem[]
 export interface IToys {
   initToys: (state: IController) => void,
   renderToysCard: () => void,
-  renderRangeSlider: (classToys: ) => void,
+  renderRangeSlider: (classToys: any) => void,
   sortCard: () => void,
   filterCard: () => void,
   shapeFilterCard: () => void,

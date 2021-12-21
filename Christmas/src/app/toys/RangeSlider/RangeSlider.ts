@@ -9,7 +9,7 @@ export const noUiSlider = _default;
 
 class RangeSlider {
 
-  renderRangeSliderNumber(classToys): void {
+  renderRangeSliderNumber(classToys: any): void {
     const rangeSliderNumber = <target>document.querySelector('.main__toys__number-slider')
     
     if (rangeSliderNumber) {
@@ -40,7 +40,7 @@ class RangeSlider {
     })
   }
 
-  renderRangeSliderYear(classToys): void {
+  renderRangeSliderYear(classToys: any): void {
     const rangeSliderYear = <target>document.querySelector('.main__toys__year-slider')
 
     if (rangeSliderYear) {

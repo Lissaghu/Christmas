@@ -11,7 +11,6 @@ class Controller implements IController {
     this.toys = new Toys()
     this.state = {
       currentPage: 'main'
-
     }
   }
 

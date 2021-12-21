@@ -1,12 +1,12 @@
 import './Toys.scss'
 import data from '../../data'
-import { IController, Data, IToys } from '../models/Models'
+import { IController, Data, IToys, DataItem } from '../models/Models'
 import RangeSlider from './RangeSlider/RangeSlider'
 import SortToys from './SortToys'
 
 const sortToys = new SortToys()
 
-const dataSort = {
+const dataSort: any = {
   start: sortToys.startName(),
   end: sortToys.endName(),
   max: sortToys.maxYear(),
@@ -18,9 +18,11 @@ export type ToysType = typeof Toys
 class Toys implements IToys {
   private rangeSlider = new RangeSlider()
   private toysState: {[key: string]: string}
-  private filterObj
-
-  constructor(private toys: Data, private rangeToys: Data) { 
+  private filterObj: any
+  private toys: Data
+  
+  constructor() { 
+    this.toys = [] 
     this.toysState = {
       currentSort: 'start',
       currentFilter: '',
@@ -127,7 +129,7 @@ class Toys implements IToys {
     this.toys = toysCard
   }
 
-  renderRangeSlider(classToys: ToysType): void {
+  renderRangeSlider(classToys: any): void {
     this.rangeSlider.renderRangeSliderNumber(classToys)
     this.rangeSlider.renderRangeSliderYear(classToys)
   }
@@ -149,10 +151,10 @@ class Toys implements IToys {
     for (const [key, value] of Object.entries(this.filterObj)) {
       let toysCardFiltered: Data = []
 
-      for (const [subKey, subValue] of Object.entries(value)) {
+      for (const [subKey, subValue] of Object.entries(value as any)) {
         if (subValue === true) {
           toysCardFiltered = toysCardFiltered.concat(
-            this.toys.filter(card => {
+            this.toys.filter((card: any) => {
               return card[`${key}`] === subKey 
             })
           )
@@ -177,7 +179,7 @@ class Toys implements IToys {
       item.addEventListener('click', (e: Event): void => {
 
         let itemClass = document.querySelector(`.${item.className.slice(0, 21)} .main__toys__form_svg`)
-        let filterShape = (e?.currentTarget as HTMLElement).dataset.form 
+        let filterShape: any = (e?.currentTarget as HTMLElement).dataset.form
 
         if (!itemClass?.classList.contains('main__toys__form_svg-active')) {
           this.filterObj.shape[filterShape] = true
