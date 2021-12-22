@@ -1,6 +1,6 @@
-import { IController } from "../models/Models"
+import { IController, TDataItem } from "../models/Models"
 import Toys from "../toys/Toys"
-
+import data from "../../data"
 
 class Controller implements IController {
   
@@ -8,7 +8,7 @@ class Controller implements IController {
   private toys
 
   constructor() {
-    this.toys = new Toys()
+    this.toys = new Toys(data as TDataItem<typeof data>)
     this.state = {
       currentPage: 'main'
     }

@@ -5,6 +5,8 @@ export interface IController {
   render: () => void
 }
 
+export type TDataItem<T> = [ T extends {[key: string]: infer U} ? U : never ] 
+
 export type DataItem = {
   num: string,
   name: string,
@@ -15,6 +17,7 @@ export type DataItem = {
   size: string,
   favorite: boolean
 }
+// {[key: string]: string}
 
 export type Data = DataItem[]
 

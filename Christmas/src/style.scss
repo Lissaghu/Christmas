@@ -445,12 +445,44 @@ button {
   backdrop-filter: blur(31px);
 }
 
-.highlight {
-  color: rgb(197, 197, 74);
-  .main__toys__form_svg {
-    fill: rgb(197, 197, 74);
-  }
+.toys__modal {
+  position: absolute;
+  left: 60%;
+  top: -100%;
+  
+  width: 300px;
+  height: 70px;
+
+  border-radius: 5px;
+  background-color: #3e5857;
+  box-shadow: 0px 2px 5px 0px #141414;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  column-gap: 30px;
+
+  font-size: 18px;
+  transition: 0.6s all ease;
 }
+
+.toys__modal_close {
+  background-color: transparent;
+  background-image: url('./assets/svg/close.svg');
+  background-repeat: no-repeat;
+  background-size: 20px 20px;
+
+  width: 20px;
+  height: 20px;
+
+  border: none;
+}
+
+.toys__modal_active {
+  top: 15px;
+}
+
+
 
 @media screen and (max-width: 1490px) {
   

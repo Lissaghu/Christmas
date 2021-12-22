@@ -1,6 +1,6 @@
 import './Toys.scss'
 import data from '../../data'
-import { IController, Data, IToys, DataItem } from '../models/Models'
+import { IController, IToys, Data, DataItem, TDataItem } from '../models/Models'
 import RangeSlider from './RangeSlider/RangeSlider'
 import SortToys from './SortToys'
 
@@ -13,72 +13,74 @@ const dataSort: any = {
   min: sortToys.minYear()
 }
 
+let filter = {
+  shape: {
+    колокольчик: false,
+    шар: false,
+    шишка: false,
+    снежинка: false,
+    фигурка: false
+  },
+  color: {
+    белый: false,
+    желтый: false,
+    красный: false,
+    синий: false,
+    зелёный: false
+  },
+  favorite: {
+    favorite: false
+  },
+  size: {
+    большой: false,
+    средний: false,
+    малый: false
+  },
+  count: {
+    start: 1,
+    end: 12
+  },
+  year: {
+    start: 1940,
+    end: 2021
+  }
+}
+
 export type ToysType = typeof Toys
 
 class Toys implements IToys {
   private rangeSlider = new RangeSlider()
-  private toysState: {[key: string]: string}
+  private toysState
   private filterObj: any
-  private toys: Data
+  private count: number
   
-  constructor() { 
-    this.toys = [] 
+  constructor(private toys: Data) { 
     this.toysState = {
       currentSort: 'start',
-      currentFilter: '',
     }
-    this.filterObj = {
-      shape: {
-        колокольчик: false,
-        шар: false,
-        шишка: false,
-        снежинка: false,
-        фигурка: false
-      },
-      color: {
-        белый: false,
-        желтый: false,
-        красный: false,
-        синий: false,
-        зелёный: false
-      },
-      favorite: {
-        favorite: false
-      },
-      size: {
-        большой: false,
-        средний: false,
-        малый: false
-      },
-      count: {
-        start: 1,
-        end: 12
-      },
-      year: {
-        start: 1940,
-        end: 2021
-      },
-      
-    }
+    this.filterObj = JSON.parse(JSON.stringify(filter))
+    this.count = 0
   }
 
   initToys(state: IController): void {
     this.filterCard()
     this.renderToysCard() 
     state.setEventListener()
+    this.resetAllFilter()
     this.renderRangeSlider(this)  
     this.sortCard()
     this.shapeFilterCard()
     this.colorFilterCard()
     this.sizeFilterCard()
     this.favoriteFilterCard()
+    
   }
 
   renderToysCard(): void {
     let toysCardContainer: HTMLDivElement = document.querySelector('.main__toys__card') as HTMLDivElement
     toysCardContainer.innerHTML = ''
 
-    let toysCard = [...this.toys]
+    let toysCard: Data = [...this.toys]
 
     let copyToysCard: Data = []
 
@@ -100,11 +102,11 @@ class Toys implements IToys {
       })
     }
 
-    if ((this.filterObj.size.малый === true)) {
-      copyToysCard = copyToysCard.filter(item => {
-        return item.size === 'малый'
-      })
-    }
+    // if ((this.filterObj.size.малый === true)) {
+    //   copyToysCard = copyToysCard.filter(item => {
+    //     return item.size === 'малый'
+    //   })
+    // }
               
     for (let elem of copyToysCard) {
       let wrap = document.createElement('div')
@@ -114,9 +116,9 @@ class Toys implements IToys {
       let favorite = elem.favorite ? 'да' : 'нет'
 
       let card = `
-      <div class="toys__card_container">
+      <div class="toys__card_container" data-pic="${elem.num}">
         <span class="toys__card_title">${elem.name}</span>
-        <img class="toys__card_img" src="./assets/toys/${elem.num}.webp" alt="">
+        <img class="toys__card_img" src="./assets/toys/${elem.num}.webp" alt="" data-pic="${elem.num}">
         <span class="toys__card_description">Количество: ${elem.count}</span>
         <span class="toys__card_description">Год покупки: ${elem.year} год</span>
         <span class="toys__card_description">Форма игрушки: ${elem.shape}</span>
@@ -127,6 +129,7 @@ class Toys implements IToys {
       wrap.innerHTML = card
     }
     this.toys = toysCard
+    this.setFavoriteCard()
   }
 
   renderRangeSlider(classToys: any): void {
@@ -147,7 +150,7 @@ class Toys implements IToys {
   }
 
   filterCard(): void {
-    this.toys = data
+    this.toys = data 
     for (const [key, value] of Object.entries(this.filterObj)) {
       let toysCardFiltered: Data = []
 
@@ -230,7 +233,6 @@ class Toys implements IToys {
         else {
           this.filterObj.size[value] = false
         }
-        console.log(this.filterObj.size)
 
         this.filterCard()
         this.renderToysCard()
@@ -252,6 +254,48 @@ class Toys implements IToys {
 
       this.filterCard()
       this.renderToysCard()
+    })
+  }
+
+  resetAllFilter(): void {
+    let buttonReset: HTMLButtonElement = document.querySelector('.main__toys_remove') as HTMLButtonElement
+
+    buttonReset?.addEventListener('click', () => {
+
+      this.filterObj = JSON.parse(JSON.stringify(filter))
+
+      this.filterCard()
+      this.renderToysCard()
+    })
+  }
+
+  setFavoriteCard(): void {
+    let picturesContainer = document.querySelectorAll('.toys__card_container')
+    let countFavoriteToys: HTMLSpanElement = document.querySelector('.header__toys_like') as HTMLSpanElement
+    let modal = document.querySelector('.toys__modal')
+    let modalClose = document.querySelector('.toys__modal_close')
+
+    picturesContainer.forEach(item => {
+      item.addEventListener('click', () => {
+
+        if (this.count < 20) {
+          if (item.classList.contains('favorite')) {
+            item.classList.remove('favorite')
+            countFavoriteToys.textContent = `Любимые игрушки: ${--this.count}`
+          }
+          else {
+            item.classList.add('favorite')
+            countFavoriteToys.textContent = `Любимые игрушки: ${++this.count}`
+          }
+        }
+        else {
+          modal?.classList.add('toys__modal_active')
+          modalClose?.addEventListener('click', () => modal?.classList.remove('toys__modal_active'))
+          return
+        }
+
+      
+      })
     })
   }
 
