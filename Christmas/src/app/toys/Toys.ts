@@ -133,6 +133,7 @@ class Toys implements IToys {
     }
     this.toys = toysCard
     this.setFavoriteCard()
+    this.searchFilterCard()
   }
 
   renderRangeSlider(classToys: any): void {
@@ -322,6 +323,50 @@ class Toys implements IToys {
         }
       })
     })
+  }
+
+  searchFilterCard() {
+    let element: HTMLInputElement = document.querySelector('.header__toys_input') as HTMLInputElement
+    element.focus()
+
+    element.addEventListener('input', () => {
+      let elementValue = element.value.trim().toLowerCase()
+      let searchElements: NodeListOf<HTMLSpanElement> = document.querySelectorAll('.toys__card_title')
+      let hideElements = document.querySelectorAll('.hide')
+
+      if (hideElements.length == 60) {
+        let toysCardContainer: HTMLDivElement = document.querySelector('.main__toys__card') as HTMLDivElement
+        let sorryContainer = document.createElement('div')
+        sorryContainer.classList.add('sorry-container')
+        sorryContainer.innerHTML = `Извините, совпадений не обнаружено`
+        toysCardContainer.append(sorryContainer)
+      }
+      else {
+        let sorryContainer = document.querySelectorAll('.sorry-container')
+        sorryContainer.forEach(item => {
+          item.remove()
+        })
+      }
+
+      if (elementValue !== '') {
+        searchElements.forEach(item => {
+          if (item.innerText.toLowerCase().search(elementValue) === -1) {
+            (item.parentElement?.parentElement as HTMLElement).classList.add('hide')
+            
+          }
+          else {
+            (item.parentElement?.parentElement as HTMLElement).classList.remove('hide')
+          }
+        })
+      }
+      else {
+        searchElements.forEach(item => {
+          (item.parentElement?.parentElement as HTMLElement).classList.remove('hide')
+        })
+      }
+      
+    })
+   
   }
 
 }

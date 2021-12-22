@@ -3,11 +3,9 @@
 .main__toys__card {
   margin-left: 25px;
 
-  display: flex;
-  flex-wrap: wrap;
-
-  column-gap: 30px;
-  row-gap: 30px;
+  display: grid;
+  grid-template-columns: repeat(auto-fill, 222px);
+  grid-gap: 30px;
 
   background-color: #192F2D;
   max-height: 837px;
