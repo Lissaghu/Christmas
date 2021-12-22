@@ -2,7 +2,9 @@ import './Toys.scss'
 import data from '../../data'
 import { IController, IToys, Data, DataItem, TDataItem } from '../models/Models'
 import RangeSlider from './RangeSlider/RangeSlider'
+import { noUiSlider } from './RangeSlider/RangeSlider'
 import SortToys from './SortToys'
+import { target } from 'nouislider'
 
 const sortToys = new SortToys()
 
@@ -261,8 +263,32 @@ class Toys implements IToys {
     let buttonReset: HTMLButtonElement = document.querySelector('.main__toys_remove') as HTMLButtonElement
 
     buttonReset?.addEventListener('click', () => {
-
       this.filterObj = JSON.parse(JSON.stringify(filter))
+
+      const rangeSliderNumber = <target>document.querySelector('.main__toys__number-slider')
+      rangeSliderNumber.noUiSlider?.set([this.filterObj.count.start, this.filterObj.count.end])
+
+      const rangeSliderYear = <target>document.querySelector('.main__toys__year-slider')
+      rangeSliderYear.noUiSlider?.set([this.filterObj.year.start, this.filterObj.year.end])
+
+      let formElements = document.querySelectorAll('.main__toys__form_svg')
+      formElements.forEach(item => {
+        item.classList.remove('main__toys__form_svg-active')
+      })
+
+      let colorElements = document.querySelectorAll('.ckbx')
+      colorElements.forEach(item => {
+        (item as HTMLInputElement).checked = false
+      })
+
+      let sizeElements = document.querySelectorAll('.ckbx-sz-inp')
+      sizeElements.forEach(item => {
+        (item as HTMLInputElement).checked = false
+      })
+
+      let favoriteElement: HTMLInputElement = document.querySelector('.main__toys__like_input') as HTMLInputElement
+      (favoriteElement as HTMLInputElement).checked = false
+
 
       this.filterCard()
       this.renderToysCard()
@@ -293,8 +319,6 @@ class Toys implements IToys {
           modalClose?.addEventListener('click', () => modal?.classList.remove('toys__modal_active'))
           return
         }
-
-      
       })
     })
   }
