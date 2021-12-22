@@ -104,11 +104,12 @@ class Toys implements IToys {
       })
     }
 
-    // if ((this.filterObj.size.малый === true)) {
-    //   copyToysCard = copyToysCard.filter(item => {
-    //     return item.size === 'малый'
-    //   })
-    // }
+    if (copyToysCard.length === 0) {
+      let sorryContainer = document.createElement('div')
+      sorryContainer.classList.add('sorry-container')
+      sorryContainer.innerHTML = `Извините, совпадений не обнаружено`
+      toysCardContainer.append(sorryContainer)
+    }
               
     for (let elem of copyToysCard) {
       let wrap = document.createElement('div')
