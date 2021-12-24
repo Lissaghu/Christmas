@@ -1,6 +1,6 @@
 import './Toys.scss'
 import data from '../../data'
-import { IController, IToys, Data, DataItem, TDataItem } from '../models/Models'
+import { IController, IToys, Data, DataItem, TDataItem, ISliderArg } from '../models/Models'
 import RangeSlider from './RangeSlider/RangeSlider'
 import { noUiSlider } from './RangeSlider/RangeSlider'
 import SortToys from './SortToys'
@@ -8,7 +8,7 @@ import { target } from 'nouislider'
 
 const sortToys = new SortToys()
 
-const dataSort: any = {
+const dataSort = {
   start: sortToys.startName(),
   end: sortToys.endName(),
   max: sortToys.maxYear(),
@@ -48,20 +48,25 @@ let filter = {
   }
 }
 
+export type FilterObjectType = typeof filter
 export type ToysType = typeof Toys
 
 class Toys implements IToys {
   private rangeSlider = new RangeSlider()
-  private toysState
-  private filterObj: any
+  private currentSort
+  private filters
   private count: number
+  private sliderArg: ISliderArg
   
   constructor(private toys: Data) { 
-    this.toysState = {
-      currentSort: 'start',
-    }
-    this.filterObj = JSON.parse(JSON.stringify(filter))
+    this.currentSort = 'start'
+    this.filters = JSON.parse(JSON.stringify(filter))
     this.count = 0
+    this.sliderArg = {
+      filters: this.filters,
+      filterCard: () => this.filterCard(),
+      render:() => this.renderToysCard()
+    }
   }
 
   initToys(state: IController): void {
@@ -69,49 +74,34 @@ class Toys implements IToys {
     this.renderToysCard() 
     state.setEventListener()
     this.resetAllFilter()
-    this.renderRangeSlider(this)  
+    this.renderRangeSlider()  
     this.sortCard()
     this.shapeFilterCard()
     this.colorFilterCard()
     this.sizeFilterCard()
     this.favoriteFilterCard()
-    
   }
 
   renderToysCard(): void {
     let toysCardContainer: HTMLDivElement = document.querySelector('.main__toys__card') as HTMLDivElement
-    toysCardContainer.innerHTML = ''
-
-    let toysCard: Data = [...this.toys]
-
-    let copyToysCard: Data = []
-
-    if (this.filterObj.count.start >= 1 || this.filterObj.count.end <= 12) {
-      copyToysCard = toysCard.filter((item: { count: string | number; }) => {
-        return +item.count >= this.filterObj.count.start && +item.count <= this.filterObj.count.end
-      }).sort(dataSort[this.toysState.currentSort])   
-    } 
-
-    if (this.filterObj.year.start >= 1940 || this.filterObj.year.start <= 2021) {
-      copyToysCard = copyToysCard.filter((item: { year: string | number; }) => {
-        return +item.year >= this.filterObj.year.start && +item.year <= this.filterObj.year.end
-      }).sort(dataSort[this.toysState.currentSort])   
-    }
+    toysCardContainer.innerHTML = ''    
     
-    if (this.filterObj.favorite.favorite === true) {
-      copyToysCard = copyToysCard.filter((item : { favorite: boolean})=> {
-        return item.favorite === this.filterObj.favorite.favorite
-      })
-    }
-
-    if (copyToysCard.length === 0) {
+    if (this.toys.length === 0) {
       let sorryContainer = document.createElement('div')
       sorryContainer.classList.add('sorry-container')
       sorryContainer.innerHTML = `Извините, совпадений не обнаружено`
       toysCardContainer.append(sorryContainer)
     }
-              
-    for (let elem of copyToysCard) {
+
+    if (this.currentSort !== localStorage.getItem('sort')) {
+      this.toys.sort(dataSort[localStorage.getItem('sort')])
+    }
+    else {
+      this.toys.sort(dataSort[this.currentSort])
+    }
+    
+        
+    for (let elem of this.toys) {
       let wrap = document.createElement('div')
       wrap.classList.add('main__toys__card-wrap')
       toysCardContainer.append(wrap)
@@ -131,73 +121,108 @@ class Toys implements IToys {
       </div>`
       wrap.innerHTML = card
     }
-    this.toys = toysCard
+  
     this.setFavoriteCard()
     this.searchFilterCard()
+    this.localStorage()
   }
 
-  renderRangeSlider(classToys: any): void {
-    this.rangeSlider.renderRangeSliderNumber(classToys)
-    this.rangeSlider.renderRangeSliderYear(classToys)
+  renderRangeSlider(): void {    
+    this.rangeSlider.renderRangeSliderNumber(this.sliderArg)
+    this.rangeSlider.renderRangeSliderYear(this.sliderArg)
   }
 
   sortCard(): void {
     let select: HTMLSelectElement = document.querySelector('.main__toys__sort_select') as HTMLSelectElement
+
+    if (localStorage.getItem('sort')) {
+      select.value = localStorage.getItem('sort') as string
+    }
+    
     select.addEventListener('click', () => {
-      if (this.toysState.currentSort === select.value) {
+      if (this.currentSort === select.value) {
         return
       } else {
-        this.toysState.currentSort = select.value
+        localStorage.setItem('sort', select.value)
+        this.currentSort = select.value
         this.renderToysCard()
       } 
     })
   }
 
+  // All filter card method
   filterCard(): void {
-    this.toys = data 
-    for (const [key, value] of Object.entries(this.filterObj)) {
-      let toysCardFiltered: Data = []
-
-      for (const [subKey, subValue] of Object.entries(value as any)) {
-        if (subValue === true) {
-          toysCardFiltered = toysCardFiltered.concat(
-            this.toys.filter((card: any) => {
-              return card[`${key}`] === subKey 
-            })
-          )
-        }
-      }
-
-      if (toysCardFiltered.length) {
-        this.toys = this.toys.concat(toysCardFiltered)
-        if (this.toys.length !== toysCardFiltered.length) {
-          this.toys = this.toys.filter((item, index) => {
-            return this.toys.indexOf(item) !== index
-          })
-        } 
-      }
+    if (localStorage.getItem('filter')) {
+      this.filters = JSON.parse(localStorage.getItem('filter') as string)
     }
+
+    let toys = data
+    const fKey = ['shape', 'color', 'size']
+    fKey.forEach(key => {
+      const shape = Object.keys(this.filters[key]).filter(item => this.filters[key][item])
+
+      if (shape.length) {
+        toys = toys.filter(item => shape.includes(item[key]))
+      }
+    })
+    
+    // RangeSlider count filter
+    if (this.filters.count.start >= 1 || this.filters.count.end <= 12) {
+      toys = toys.filter((item: { count: string | number; }) => {
+        return +item.count >= this.filters.count.start && +item.count <= this.filters.count.end
+      }).sort(dataSort[this.currentSort])   
+    } 
+
+    // RangeSlider year filter
+    if (this.filters.year.start >= 1940 || this.filters.year.start <= 2021) {
+      toys = toys.filter((item: { year: string | number; }) => {
+        return +item.year >= this.filters.year.start && +item.year <= this.filters.year.end
+      }).sort(dataSort[this.currentSort])   
+    }
+    
+    // Favorite filter
+    if (this.filters.favorite.favorite === true) {
+      toys = toys.filter((item : { favorite: boolean})=> {
+        return item.favorite === this.filters.favorite.favorite
+      })
+    }
+    
+    this.toys = toys 
   }
 
   shapeFilterCard(): void {
     let elements = document.querySelectorAll('.form')
+
+    let localFilterObj = JSON.parse(localStorage.getItem('filter') as string)
+
+    for (const [key, value] of Object.entries(localFilterObj.shape)) {
+      elements.forEach((item) => {
+        if ((item as HTMLElement).dataset.form === key && value === true) {
+          let itemClass = document.querySelector(`.${item.className.slice(0, 21)} .main__toys__form_svg`)
+          itemClass?.classList.add('main__toys__form_svg-active')
+        }
+      })
+    }
     
     elements.forEach(item => {
       item.addEventListener('click', (e: Event): void => {
 
         let itemClass = document.querySelector(`.${item.className.slice(0, 21)} .main__toys__form_svg`)
-        let filterShape: any = (e?.currentTarget as HTMLElement).dataset.form
+        let filterShape = (e?.currentTarget as HTMLElement).dataset.form
 
         if (!itemClass?.classList.contains('main__toys__form_svg-active')) {
-          this.filterObj.shape[filterShape] = true
+          this.filters.shape[filterShape as string] = true
           itemClass?.classList.add('main__toys__form_svg-active')
         } 
         else {
-          this.filterObj.shape[filterShape] = false
+          this.filters.shape[filterShape as string] = false
           itemClass?.classList.remove('main__toys__form_svg-active')
         }
+
+        this.localStorage()
         this.filterCard()
         this.renderToysCard()
+        
       })
     }) 
   } 
@@ -205,18 +230,29 @@ class Toys implements IToys {
   colorFilterCard(): void {
     let elements = document.querySelectorAll('.ckbx')
 
+    let localFilterObj = JSON.parse(localStorage.getItem('filter') as string)
+
+    for (const [key, value] of Object.entries(localFilterObj.color)) {
+      elements.forEach((item) => {
+        if ((item as HTMLInputElement).value === key && value === true) {
+          (item as HTMLInputElement).checked = true
+        }
+      })
+    }
+
     elements.forEach(item => {
       item.addEventListener('input', () => {
 
         let value = (item as HTMLInputElement).value 
 
         if ((item as HTMLInputElement).checked) {
-          this.filterObj.color[value] = true
+          this.filters.color[value] = true
         }
         else {
-          this.filterObj.color[value] = false
+          this.filters.color[value] = false
         }
 
+        this.localStorage()
         this.filterCard()
         this.renderToysCard()
       })
@@ -226,20 +262,32 @@ class Toys implements IToys {
   sizeFilterCard(): void {
     let elements = document.querySelectorAll('.ckbx-sz-inp')
 
+    let localFilterObj = JSON.parse(localStorage.getItem('filter') as string)
+
+    for (const [key, value] of Object.entries(localFilterObj.size)) {
+      elements.forEach((item) => {
+        if ((item as HTMLInputElement).value === key && value === true) {
+          (item as HTMLInputElement).checked = true
+        }
+      })
+    }
+
     elements.forEach(item => {
       item.addEventListener('input', () => {
 
         let value = (item as HTMLInputElement).value
 
         if ((item as HTMLInputElement).checked) {
-          this.filterObj.size[value] = true
+          this.filters.size[value] = true
         }
         else {
-          this.filterObj.size[value] = false
+          this.filters.size[value] = false
         }
 
+        this.localStorage()
         this.filterCard()
         this.renderToysCard()
+        
       })
     })
   }
@@ -247,15 +295,24 @@ class Toys implements IToys {
   favoriteFilterCard(): void {
     let element: HTMLInputElement = document.querySelector('.main__toys__like_input') as HTMLInputElement
 
+    let localFilterObj = JSON.parse(localStorage.getItem('filter') as string)
+
+    for (const [key, value] of Object.entries(localFilterObj.favorite)) {
+      if (element.value === key && value === true) {
+        element.checked = true
+      }
+    }
+
     element?.addEventListener('input', () => {
 
       if ((element as HTMLInputElement).checked) {
-        this.filterObj.favorite.favorite = true
+        this.filters.favorite.favorite = true
       }
       else {
-        this.filterObj.favorite.favorite = false
+        this.filters.favorite.favorite = false
       }
 
+      this.localStorage()
       this.filterCard()
       this.renderToysCard()
     })
@@ -265,13 +322,14 @@ class Toys implements IToys {
     let buttonReset: HTMLButtonElement = document.querySelector('.main__toys_remove') as HTMLButtonElement
 
     buttonReset?.addEventListener('click', () => {
-      this.filterObj = JSON.parse(JSON.stringify(filter))
+      this.filters = JSON.parse(JSON.stringify(filter))
 
+      // Reset all
       const rangeSliderNumber = <target>document.querySelector('.main__toys__number-slider')
-      rangeSliderNumber.noUiSlider?.set([this.filterObj.count.start, this.filterObj.count.end])
+      rangeSliderNumber.noUiSlider?.set([this.filters.count.start, this.filters.count.end])
 
       const rangeSliderYear = <target>document.querySelector('.main__toys__year-slider')
-      rangeSliderYear.noUiSlider?.set([this.filterObj.year.start, this.filterObj.year.end])
+      rangeSliderYear.noUiSlider?.set([this.filters.year.start, this.filters.year.end])
 
       let formElements = document.querySelectorAll('.main__toys__form_svg')
       formElements.forEach(item => {
@@ -291,7 +349,12 @@ class Toys implements IToys {
       let favoriteElement: HTMLInputElement = document.querySelector('.main__toys__like_input') as HTMLInputElement
       (favoriteElement as HTMLInputElement).checked = false
 
+      // Reset sort
+      this.currentSort = 'start'
+      let select: HTMLSelectElement = document.querySelector('.main__toys__sort_select') as HTMLSelectElement
+      select.value = 'start'
 
+      localStorage.clear()
       this.filterCard()
       this.renderToysCard()
     })
@@ -325,7 +388,7 @@ class Toys implements IToys {
     })
   }
 
-  searchFilterCard() {
+  searchFilterCard(): void {
     let element: HTMLInputElement = document.querySelector('.header__toys_input') as HTMLInputElement
     element.focus()
 
@@ -333,9 +396,9 @@ class Toys implements IToys {
       let elementValue = element.value.trim().toLowerCase()
       let searchElements: NodeListOf<HTMLSpanElement> = document.querySelectorAll('.toys__card_title')
       let hideElements = document.querySelectorAll('.hide')
+      let toysCardContainer: HTMLDivElement = document.querySelector('.main__toys__card') as HTMLDivElement
 
       if (hideElements.length == 60) {
-        let toysCardContainer: HTMLDivElement = document.querySelector('.main__toys__card') as HTMLDivElement
         let sorryContainer = document.createElement('div')
         sorryContainer.classList.add('sorry-container')
         sorryContainer.innerHTML = `Извините, совпадений не обнаружено`
@@ -363,10 +426,12 @@ class Toys implements IToys {
         searchElements.forEach(item => {
           (item.parentElement?.parentElement as HTMLElement).classList.remove('hide')
         })
-      }
-      
+      } 
     })
-   
+  }
+
+  localStorage() {
+    localStorage.setItem('filter', JSON.stringify(this.filters))
   }
 
 }

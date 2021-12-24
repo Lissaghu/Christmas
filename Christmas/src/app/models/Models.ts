@@ -1,7 +1,15 @@
+import { FilterObjectType } from "../toys/Toys"
+
 export interface IController {
   init: () => void,
   setEventListener: () => void,
   changePage: (event: Event | undefined) => void,
+  render: () => void
+}
+
+export interface ISliderArg {
+  filters: FilterObjectType
+  filterCard: () => void
   render: () => void
 }
 
@@ -24,7 +32,7 @@ export type Data = DataItem[]
 export interface IToys {
   initToys: (state: IController) => void,
   renderToysCard: () => void,
-  renderRangeSlider: (classToys: any) => void,
+  renderRangeSlider: (state: IToys) => void,
   sortCard: () => void,
   filterCard: () => void,
   shapeFilterCard: () => void,

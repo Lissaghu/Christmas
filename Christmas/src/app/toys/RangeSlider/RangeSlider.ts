@@ -2,14 +2,13 @@ import 'nouislider/dist/nouislider.css'
 import './RangeSliderYear.scss'
 import './RangeSliderNumber.scss'
 import _default, { target } from "nouislider";
-import { IToys } from '../../models/Models';
-import { ToysType } from '../Toys';
+import { ISliderArg } from '../../models/Models';
 
 export const noUiSlider = _default;
 
 class RangeSlider {
 
-  renderRangeSliderNumber(classToys: any): void {
+  renderRangeSliderNumber(sliderArg: ISliderArg): void {
     const rangeSliderNumber = <target>document.querySelector('.main__toys__number-slider')
     
     if (rangeSliderNumber) {
@@ -24,23 +23,32 @@ class RangeSlider {
       });
     }
 
+    
+
+    let localFilterObj = JSON.parse(localStorage.getItem('filter') as string)
+    rangeSliderNumber.noUiSlider?.set([localFilterObj.count.start, localFilterObj.count.end])
+
     let numberMinValue: HTMLDivElement = document.getElementById('number-min') as HTMLDivElement
     let numberMaxValue: HTMLDivElement = document.getElementById('number-max') as HTMLDivElement
 
     rangeSliderNumber.noUiSlider?.on('update', () => {
       let sliderNum: string[] =  rangeSliderNumber.noUiSlider?.get() as string[]
-
-      numberMinValue.textContent = +sliderNum[0] + ''
-      numberMaxValue.textContent = +sliderNum[1] + ''
-
-      classToys.filterObj.count.start = +sliderNum[0]
-      classToys.filterObj.count.end = +sliderNum[1]
       
-      classToys.renderToysCard()
+      numberMinValue.textContent = +sliderNum[0] + '' 
+      numberMaxValue.textContent = +sliderNum[1] + '' 
+
+      sliderArg.filters.count.start = +sliderNum[0]
+      sliderArg.filters.count.end = +sliderNum[1]
+
+      localStorage.setItem('filter', JSON.stringify(sliderArg.filters))
+      
+      // All filter and render card method
+      sliderArg.filterCard()
+      sliderArg.render()
     })
   }
 
-  renderRangeSliderYear(classToys: any): void {
+  renderRangeSliderYear(sliderArg: ISliderArg): void {
     const rangeSliderYear = <target>document.querySelector('.main__toys__year-slider')
 
     if (rangeSliderYear) {
@@ -55,6 +63,9 @@ class RangeSlider {
       });
     }
 
+    let localFilterObj = JSON.parse(localStorage.getItem('filter') as string)
+    rangeSliderYear.noUiSlider?.set([localFilterObj.year.start, localFilterObj.year.end])
+
     let yearMinValue: HTMLDivElement = document.getElementById('year-min') as HTMLDivElement
     let yearMaxValue: HTMLDivElement = document.getElementById('year-max') as HTMLDivElement
 
@@ -64,10 +75,14 @@ class RangeSlider {
       yearMinValue.textContent = +sliderYear[0] + ''
       yearMaxValue.textContent = +sliderYear[1] + ''
 
-      classToys.filterObj.year.start = +sliderYear[0]
-      classToys.filterObj.year.end = +sliderYear[1]
+      sliderArg.filters.year.start = +sliderYear[0]
+      sliderArg.filters.year.end = +sliderYear[1]
 
-      classToys.renderToysCard()
+      localStorage.setItem('filter', JSON.stringify(sliderArg.filters))
+
+      // All filter and render card method
+      sliderArg.filterCard()
+      sliderArg.render()
     })
   }
 }
