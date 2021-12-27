@@ -66,6 +66,13 @@
   border: none;
 
   margin: 0 61px 36px 0;
+
+  transition: 0.4s all ease;
+
+  &:hover,
+  &:focus {
+    opacity: 0.6;
+  }
 }
 
 .main__tree__snow {
@@ -78,6 +85,13 @@
   background-size: 32px 34px;
 
   border: none;
+
+  transition: 0.4s all ease;
+
+  &:hover,
+  &:focus {
+    opacity: 0.6;
+  }
 }
 
 .main__tree__title {
@@ -150,10 +164,23 @@
   background-image: url('../../assets/bg/1.webp');
   background-repeat: no-repeat;
   background-size: cover;
+
+  position: relative;
 }
 
 .main__tree__window img {
   padding-bottom: 20px;
+  z-index: 1;
+}
+
+#tsparticles .tsparticles-canvas-el {
+  position: absolute;
+  top: 0;
+  left: 0;
+  bottom: 0;
+  right: 0;
+  z-index: 1;
+  overflow: hidden;
 }
 
 // Settings right -----------------------------------------

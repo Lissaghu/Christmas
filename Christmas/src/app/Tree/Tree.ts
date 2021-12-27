@@ -1,5 +1,7 @@
 import './Tree.scss'
 import data from '../../data'
+import { canvasSnow } from '../models/particlesOptions'
+
 
 class Tree {
 
@@ -8,6 +10,8 @@ class Tree {
     this.choiseBackground()
     this. renderToys()
     this.choiseTree()
+    this.musicControl()
+    this.snowControl()
   }
 
   renderToys(): void {
@@ -92,7 +96,33 @@ class Tree {
         container.append(img)
       })
     })
+  }
 
+  musicControl(): void {
+    let buttonMusic = document.querySelector('.main__tree__sound')
+    let music = new Audio('../../assets/audio/audio.mp3')
+
+    buttonMusic?.addEventListener('click', () => {
+      music.paused ? music.play() : music.pause()
+    })
+  }
+
+  snowControl(): void {
+    let buttonSnow = document.querySelector('.main__tree__snow')
+    let snowContainer = document.getElementById('tsparticles')
+    
+    buttonSnow?.addEventListener('click', () => {
+      let canvas: HTMLElement = document.querySelector('.tsparticles-canvas-el') as HTMLElement
+    
+      if (canvas) {
+        canvas.remove()
+      } 
+      else {
+        canvasSnow()
+        let canvas: HTMLElement = document.querySelector('.tsparticles-canvas-el') as HTMLElement
+        canvas.style.position = 'absolute'
+      }
+    })
   }
 }
 
