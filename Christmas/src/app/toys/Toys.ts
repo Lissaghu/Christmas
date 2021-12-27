@@ -2,12 +2,12 @@ import './Toys.scss'
 import data from '../../data'
 import { IController, IToys, Data, DataItem, TDataItem, ISliderArg } from '../models/Models'
 import RangeSlider from './RangeSlider/RangeSlider'
-import { noUiSlider } from './RangeSlider/RangeSlider'
 import SortToys from './SortToys'
 import { target } from 'nouislider'
 
 const sortToys = new SortToys()
 
+// Kind of sort
 const dataSort = {
   start: sortToys.startName(),
   end: sortToys.endName(),
@@ -15,6 +15,7 @@ const dataSort = {
   min: sortToys.minYear()
 }
 
+// Filters object 
 let filter = {
   shape: {
     колокольчик: false,
@@ -49,19 +50,20 @@ let filter = {
 }
 
 export type FilterObjectType = typeof filter
-export type ToysType = typeof Toys
 
 class Toys implements IToys {
   private rangeSlider = new RangeSlider()
   private currentSort
   private filters
-  private count: number
   private sliderArg: ISliderArg
+  private favoriteCardNum: string[]
+  private favoriteCardCount: string[]
   
   constructor(private toys: Data) { 
     this.currentSort = 'start'
     this.filters = JSON.parse(JSON.stringify(filter))
-    this.count = 0
+    this.favoriteCardNum = []
+    this.favoriteCardCount = []
     this.sliderArg = {
       filters: this.filters,
       filterCard: () => this.filterCard(),
@@ -69,6 +71,7 @@ class Toys implements IToys {
     }
   }
 
+  // Метод вызывающийся в контроллере инициализирующий все методы класса Toys 
   initToys(state: IController): void {
     this.filterCard()
     this.renderToysCard() 
@@ -109,7 +112,7 @@ class Toys implements IToys {
       let favorite = elem.favorite ? 'да' : 'нет'
 
       let card = `
-      <div class="toys__card_container" data-pic="${elem.num}">
+      <div class="toys__card_container" data-pic="${elem.num}" data-count="${elem.count}">
         <span class="toys__card_title">${elem.name}</span>
         <img class="toys__card_img" src="./assets/toys/${elem.num}.webp" alt="" data-pic="${elem.num}">
         <span class="toys__card_description">Количество: ${elem.count}</span>
@@ -120,7 +123,7 @@ class Toys implements IToys {
         <span class="toys__card_description">Любимая: ${favorite}</span>
       </div>`
       wrap.innerHTML = card
-    }
+    }    
   
     this.setFavoriteCard()
     this.searchFilterCard()
@@ -360,23 +363,56 @@ class Toys implements IToys {
     })
   }
 
+  // Метод работы с избранными карточками
   setFavoriteCard(): void {
     let picturesContainer = document.querySelectorAll('.toys__card_container')
     let countFavoriteToys: HTMLSpanElement = document.querySelector('.header__toys_like') as HTMLSpanElement
     let modal = document.querySelector('.toys__modal')
     let modalClose = document.querySelector('.toys__modal_close')
 
+    // Итерируем все карточки игрушек
     picturesContainer.forEach(item => {
-      item.addEventListener('click', () => {
 
-        if (this.count < 20) {
+      let favoriteCardJSON: string[] = JSON.parse(localStorage.getItem('favorite') as string)
+
+      // Исходный массив равен массиву из localStorage
+      if (favoriteCardJSON) this.favoriteCardNum = favoriteCardJSON
+      
+      // Возвращает количество игрушек, находящихся в избранном из localStorage и присваивает им класс favorite
+      let count: () => number = () => {
+        if (localStorage.getItem('favorite')) {
+
+          favoriteCardJSON.forEach(el => {
+            if ((item as HTMLElement).dataset.pic === el) {
+              item.classList.add('favorite')
+            }
+          })
+
+          return JSON.parse(localStorage.getItem('favorite') as string).length
+        }
+        return 0
+      }
+
+      countFavoriteToys.textContent = `Любимые игрушки: ${count()}`      
+
+      // Добавляем или убираем из избранного карточку
+      item.addEventListener('click', () => {
+        
+        if (this.favoriteCardNum.length < 20) {
           if (item.classList.contains('favorite')) {
             item.classList.remove('favorite')
-            countFavoriteToys.textContent = `Любимые игрушки: ${--this.count}`
+            
+            this.favoriteCardNum.forEach((data, idx) => {
+              if (data === (item as HTMLElement).dataset.pic) {
+                this.favoriteCardNum.splice(idx, 1)
+                this.favoriteCardCount.splice(idx, 1)
+              }
+            })
           }
           else {
+            this.favoriteCardNum.push((item as HTMLElement).dataset.pic as string)
+            this.favoriteCardCount.push((item as HTMLElement).dataset.count as string)
             item.classList.add('favorite')
-            countFavoriteToys.textContent = `Любимые игрушки: ${++this.count}`
           }
         }
         else {
@@ -384,6 +420,10 @@ class Toys implements IToys {
           modalClose?.addEventListener('click', () => modal?.classList.remove('toys__modal_active'))
           return
         }
+        
+        localStorage.setItem('favoriteCount', JSON.stringify(this.favoriteCardCount))
+        localStorage.setItem('favorite', JSON.stringify(this.favoriteCardNum))     
+        countFavoriteToys.textContent = `Любимые игрушки: ${this.favoriteCardNum.length}`
       })
     })
   }
@@ -432,6 +472,10 @@ class Toys implements IToys {
 
   localStorage() {
     localStorage.setItem('filter', JSON.stringify(this.filters))
+  }
+
+  setFavoriteToys() {
+    
   }
 
 }

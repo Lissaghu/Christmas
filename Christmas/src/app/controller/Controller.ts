@@ -1,16 +1,19 @@
 import { IController, TDataItem } from "../models/Models"
 import Toys from "../toys/Toys"
 import data from "../../data"
+import Tree from "../Tree/Tree"
 
 class Controller implements IController {
   
   private state: {[key: string]: string | undefined}
   private toys
+  private tree
 
   constructor() {
+    this.tree = new Tree()
     this.toys = new Toys(data as TDataItem<typeof data>)
     this.state = {
-      currentPage: 'main'
+      currentPage: 'toys'
     }
   }
 
@@ -33,6 +36,9 @@ class Controller implements IController {
     
     if (this.state.currentPage === 'toys') {
       this.toys.initToys(this)
+    }
+    if (this.state.currentPage === 'tree') {
+      this.tree.renderToys()
     }
   }
 
