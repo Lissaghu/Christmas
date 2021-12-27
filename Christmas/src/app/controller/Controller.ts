@@ -38,7 +38,7 @@ class Controller implements IController {
       this.toys.initToys(this)
     }
     if (this.state.currentPage === 'tree') {
-      this.tree.renderToys()
+      this.tree.initTree()
     }
   }
 

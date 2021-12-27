@@ -339,18 +339,18 @@ class Toys implements IToys {
         item.classList.remove('main__toys__form_svg-active')
       })
 
-      let colorElements = document.querySelectorAll('.ckbx')
+      let colorElements: NodeListOf<HTMLInputElement> = document.querySelectorAll('.ckbx')
       colorElements.forEach(item => {
-        (item as HTMLInputElement).checked = false
+        item.checked = false
       })
 
-      let sizeElements = document.querySelectorAll('.ckbx-sz-inp')
+      let sizeElements: NodeListOf<HTMLInputElement> = document.querySelectorAll('.ckbx-sz-inp')
       sizeElements.forEach(item => {
-        (item as HTMLInputElement).checked = false
+        item.checked = false
       })
 
       let favoriteElement: HTMLInputElement = document.querySelector('.main__toys__like_input') as HTMLInputElement
-      (favoriteElement as HTMLInputElement).checked = false
+      favoriteElement.checked = false
 
       // Reset sort
       this.currentSort = 'start'
@@ -365,7 +365,7 @@ class Toys implements IToys {
 
   // Метод работы с избранными карточками
   setFavoriteCard(): void {
-    let picturesContainer = document.querySelectorAll('.toys__card_container')
+    let picturesContainer: NodeListOf<HTMLElement> = document.querySelectorAll('.toys__card_container')
     let countFavoriteToys: HTMLSpanElement = document.querySelector('.header__toys_like') as HTMLSpanElement
     let modal = document.querySelector('.toys__modal')
     let modalClose = document.querySelector('.toys__modal_close')
@@ -383,7 +383,7 @@ class Toys implements IToys {
         if (localStorage.getItem('favorite')) {
 
           favoriteCardJSON.forEach(el => {
-            if ((item as HTMLElement).dataset.pic === el) {
+            if (item.dataset.pic === el) {
               item.classList.add('favorite')
             }
           })
@@ -403,15 +403,15 @@ class Toys implements IToys {
             item.classList.remove('favorite')
             
             this.favoriteCardNum.forEach((data, idx) => {
-              if (data === (item as HTMLElement).dataset.pic) {
+              if (data === item.dataset.pic) {
                 this.favoriteCardNum.splice(idx, 1)
                 this.favoriteCardCount.splice(idx, 1)
               }
             })
           }
           else {
-            this.favoriteCardNum.push((item as HTMLElement).dataset.pic as string)
-            this.favoriteCardCount.push((item as HTMLElement).dataset.count as string)
+            this.favoriteCardNum.push(item.dataset.pic as string)
+            this.favoriteCardCount.push(item.dataset.count as string)
             item.classList.add('favorite')
           }
         }

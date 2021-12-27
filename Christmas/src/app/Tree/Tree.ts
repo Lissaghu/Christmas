@@ -3,13 +3,20 @@ import data from '../../data'
 
 class Tree {
 
-  renderToys() {
+  // Метод для запуска всех методов класса
+  initTree(): void {
+    this.choiseBackground()
+    this. renderToys()
+    this.choiseTree()
+  }
+
+  renderToys(): void {
     let toysContainer = document.querySelectorAll('.main__tree__settings__toys')
     let favoriteNumLocal: string[] = JSON.parse(localStorage.getItem('favorite') as string)
     let favoriteCountLocal: string[] = JSON.parse(localStorage.getItem('favoriteCount') as string)
     
     // Перебираем контейнеры для игрушек
-    toysContainer.forEach((el, i) => {
+    toysContainer.forEach((el, i): void => {
       
       // Если в избранном игрушек нет то добавляем первые 20 игрушек из data
       if (favoriteNumLocal.length === 0) {
@@ -59,7 +66,33 @@ class Tree {
         el.append(count)
       }
     })
-    
+  }
+
+  choiseBackground(): void {
+    let elements: NodeListOf<HTMLElement> = document.querySelectorAll('.main__tree__bg_img')
+    let background: HTMLDivElement = document.querySelector('.main__tree__window') as HTMLDivElement
+
+    elements.forEach(item => {
+      item.addEventListener('click', () => {
+        background.style.backgroundImage = `url('../../assets/bg/${item.dataset.bg}.webp')`
+      })
+    })
+  }
+
+  choiseTree(): void {
+    let container: HTMLDivElement = document.querySelector('.main__tree__window') as HTMLDivElement
+    let trees: NodeListOf<HTMLElement> = document.querySelectorAll('.main__tree__img')
+
+    trees.forEach(item => {
+      item.addEventListener('click', () => {
+        let img = new Image()
+        img.src = `../../assets/tree/${item.dataset.tree}.webp`
+
+        container.innerHTML = ''
+        container.append(img)
+      })
+    })
+
   }
 }
 
