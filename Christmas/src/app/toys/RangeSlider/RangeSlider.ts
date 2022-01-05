@@ -2,11 +2,11 @@ import 'nouislider/dist/nouislider.css'
 import './RangeSliderYear.scss'
 import './RangeSliderNumber.scss'
 import _default, { target } from "nouislider";
-import { ISliderArg } from '../../models/Models';
+import { ISliderArg, IRangeSlider } from '../../models/Models';
 
 export const noUiSlider = _default;
 
-class RangeSlider {
+class RangeSlider implements IRangeSlider {
 
   renderRangeSliderNumber(sliderArg: ISliderArg): void {
     const rangeSliderNumber = <target>document.querySelector('.main__toys__number-slider')
@@ -23,16 +23,14 @@ class RangeSlider {
       });
     }
 
-    
-
     let localFilterObj = JSON.parse(localStorage.getItem('filter') as string)
     rangeSliderNumber.noUiSlider?.set([localFilterObj.count.start, localFilterObj.count.end])
 
-    let numberMinValue: HTMLDivElement = document.getElementById('number-min') as HTMLDivElement
-    let numberMaxValue: HTMLDivElement = document.getElementById('number-max') as HTMLDivElement
+    let numberMinValue = document.getElementById('number-min') as HTMLDivElement
+    let numberMaxValue = document.getElementById('number-max') as HTMLDivElement
 
     rangeSliderNumber.noUiSlider?.on('update', () => {
-      let sliderNum: string[] =  rangeSliderNumber.noUiSlider?.get() as string[]
+      let sliderNum =  rangeSliderNumber.noUiSlider?.get() as string[]
       
       numberMinValue.textContent = +sliderNum[0] + '' 
       numberMaxValue.textContent = +sliderNum[1] + '' 
@@ -66,11 +64,11 @@ class RangeSlider {
     let localFilterObj = JSON.parse(localStorage.getItem('filter') as string)
     rangeSliderYear.noUiSlider?.set([localFilterObj.year.start, localFilterObj.year.end])
 
-    let yearMinValue: HTMLDivElement = document.getElementById('year-min') as HTMLDivElement
-    let yearMaxValue: HTMLDivElement = document.getElementById('year-max') as HTMLDivElement
+    let yearMinValue = document.getElementById('year-min') as HTMLDivElement
+    let yearMaxValue = document.getElementById('year-max') as HTMLDivElement
 
     rangeSliderYear.noUiSlider?.on('update', () => {
-      let sliderYear: string[] =  rangeSliderYear.noUiSlider?.get() as string[]
+      let sliderYear =  rangeSliderYear.noUiSlider?.get() as string[]
       
       yearMinValue.textContent = +sliderYear[0] + ''
       yearMaxValue.textContent = +sliderYear[1] + ''

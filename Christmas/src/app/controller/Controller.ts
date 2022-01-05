@@ -13,7 +13,7 @@ class Controller implements IController {
     this.tree = new Tree()
     this.toys = new Toys(data as TDataItem<typeof data>)
     this.state = {
-      currentPage: 'toys'
+      currentPage: 'main'
     }
   }
 
@@ -38,7 +38,7 @@ class Controller implements IController {
       this.toys.initToys(this)
     }
     if (this.state.currentPage === 'tree') {
-      this.tree.initTree()
+      this.tree.initTree()    
     }
   }
 

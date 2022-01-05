@@ -1,6 +1,6 @@
 import './Toys.scss'
 import data from '../../data'
-import { IController, IToys, Data, DataItem, TDataItem, ISliderArg } from '../models/Models'
+import { IController, IToys, Data, ISliderArg } from '../models/Models'
 import RangeSlider from './RangeSlider/RangeSlider'
 import SortToys from './SortToys'
 import { target } from 'nouislider'
@@ -8,7 +8,7 @@ import { target } from 'nouislider'
 const sortToys = new SortToys()
 
 // Kind of sort
-const dataSort = {
+const dataSort: any = {
   start: sortToys.startName(),
   end: sortToys.endName(),
   max: sortToys.maxYear(),
@@ -89,6 +89,7 @@ class Toys implements IToys {
     let toysCardContainer: HTMLDivElement = document.querySelector('.main__toys__card') as HTMLDivElement
     toysCardContainer.innerHTML = ''    
     
+    // Если нет совпадений фильтра, то вывести уведомление
     if (this.toys.length === 0) {
       let sorryContainer = document.createElement('div')
       sorryContainer.classList.add('sorry-container')
@@ -97,13 +98,12 @@ class Toys implements IToys {
     }
 
     if (this.currentSort !== localStorage.getItem('sort')) {
-      this.toys.sort(dataSort[localStorage.getItem('sort')])
+      this.toys.sort(dataSort[localStorage.getItem('sort') as string])
     }
     else {
       this.toys.sort(dataSort[this.currentSort])
     }
-    
-        
+     
     for (let elem of this.toys) {
       let wrap = document.createElement('div')
       wrap.classList.add('main__toys__card-wrap')
@@ -165,7 +165,7 @@ class Toys implements IToys {
       const shape = Object.keys(this.filters[key]).filter(item => this.filters[key][item])
 
       if (shape.length) {
-        toys = toys.filter(item => shape.includes(item[key]))
+        toys = toys.filter((item: any) => shape.includes(item[key]))
       }
     })
     
@@ -470,14 +470,9 @@ class Toys implements IToys {
     })
   }
 
-  localStorage() {
+  localStorage(): void {
     localStorage.setItem('filter', JSON.stringify(this.filters))
   }
-
-  setFavoriteToys() {
-    
-  }
-
 }
 
 export default Toys

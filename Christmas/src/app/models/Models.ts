@@ -15,7 +15,7 @@ export interface ISliderArg {
 
 export type TDataItem<T> = [ T extends {[key: string]: infer U} ? U : never ] 
 
-export type DataItem = {
+type DataItem = {
   num: string,
   name: string,
   count: string,
@@ -25,18 +25,44 @@ export type DataItem = {
   size: string,
   favorite: boolean
 }
-// {[key: string]: string}
 
 export type Data = DataItem[]
 
 export interface IToys {
-  initToys: (state: IController) => void,
-  renderToysCard: () => void,
-  renderRangeSlider: (state: IToys) => void,
-  sortCard: () => void,
-  filterCard: () => void,
-  shapeFilterCard: () => void,
-  colorFilterCard: () => void,
-  sizeFilterCard: () => void,
+  initToys: (state: IController) => void
+  renderToysCard: () => void
+  renderRangeSlider: (state: IToys) => void
+  sortCard: () => void
+  filterCard: () => void
+  shapeFilterCard: () => void
+  colorFilterCard: () => void
+  sizeFilterCard: () => void
   favoriteFilterCard: () => void
+  resetAllFilter:() => void
+  setFavoriteCard: () => void
+  searchFilterCard: () => void
+  localStorage: () => void
+}
+
+export interface ITree {
+  initTree: () => void
+  renderToys: () => void
+  choiseBackground: () => void
+  choiseTree: () => void
+  musicControl: () => void
+  snowControl: () => void
+  dragAndDropToysOnTheTree: () => void
+  dragAndDropToysInCell: () => void
+}
+
+export interface IRangeSlider {
+  renderRangeSliderNumber: (sliderArg: ISliderArg) => void
+  renderRangeSliderYear: (sliderArg: ISliderArg) => void
+}
+
+export interface ISortToys {
+  startName: () => (a: {name: string}, b: {name: string}) => 1 | -1
+  endName: () => (a: {name: string}, b: {name: string}) => 1 | -1
+  maxYear: () => (a: {year: string}, b: {year: string}) => number
+  minYear: () => (a: {year: string}, b: {year: string}) => number
 }
