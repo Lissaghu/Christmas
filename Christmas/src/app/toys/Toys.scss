@@ -1,0 +1,74 @@
+
+// Toys card style ---------------------------
+.main__toys__card {
+  margin-left: 25px;
+
+  display: grid;
+  grid-template-columns: repeat(auto-fill, 222px);
+  grid-gap: 30px;
+
+  background-color: #192F2D;
+  max-height: 837px;
+  width: 100%;
+  overflow: auto;
+}
+
+.main__toys__card::-webkit-scrollbar {
+  display: none;
+}
+
+.main__toys__card-wrap {
+  max-height: 342px;
+}
+
+.toys__card_container {
+  display: flex;
+  flex-direction: column;
+
+  padding: 18px 0 19px;
+
+  width: 222px;
+  height: 305px;
+  
+  box-shadow: 0px 2px 10px 2px #141414;
+  border-radius: 10px;
+  background-color: rgb(132,150,150);
+  backdrop-filter: blur(4px); 
+
+  background-image: url('../../assets/svg/star.svg');
+  background-repeat: no-repeat;
+  background-size: 30px 30px;
+  background-position: bottom 20px right 20px;
+
+  cursor: pointer;
+}
+
+.toys__card_title {
+  font-size: 18px;
+  padding-left: 16px;
+}
+
+.toys__card_img {
+  width: 104px;
+  height: 106px;
+
+  margin-bottom: 10px;
+  margin-top: 10px;
+
+  align-self: center;
+}
+
+.toys__card_description {
+  padding-left: 16px;
+  margin-bottom: 10px;
+
+  font-size: 14px;
+
+  &:last-child {
+    margin-bottom: 0;
+  }
+}
+
+.favorite {
+  background-image: url('../../assets/svg/star-active.svg');
+}

@@ -1,0 +1,46 @@
+.main__toys__number {
+  font-size: 20px;
+  margin: 45px 0 25px;
+}
+
+.main__toys__number-slider {
+  margin: 25px 0 15px;
+}
+
+.main__toys__number-slider-num {
+  display: flex;
+  justify-content: space-between;
+}
+
+.noUi-target {
+  border: none;
+  background-color: #24C5DB;
+  height: 3px;
+}
+
+.noUi-connect {
+  background: #fff;
+}
+
+.noUi-handle {
+  border: 2px solid #24C5DB;
+  border-radius: 50%;
+  background: linear-gradient(0deg, rgba(0, 0, 0, 0.2), rgba(0, 0, 0, 0.2)), radial-gradient(57.23% 248.2% at 107.17% 104.02%, rgba(34, 153, 235, 0.92) 0%, rgba(34, 153, 235, 0.07) 100%), radial-gradient(104.22% 230.94% at -4.22% 0%, #24C5DB 3.62%, rgba(36, 197, 219, 0.26) 55.1%);
+}
+
+.noUi-horizontal .noUi-handle {
+  width: 18px;
+  height: 18px;
+  top: -7px;
+  right: 0;
+  cursor: pointer;
+}
+
+.noUi-horizontal .noUi-handle-lower {
+  right: -14px;
+}
+
+.noUi-handle:before,
+.noUi-handle:after {
+  display: none;
+}
