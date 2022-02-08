@@ -6,7 +6,7 @@
 - Also, for the first time I encountered multiple sorting and filtering, I thought for a very long time how to write the main filtering method.
 - I also used the SPA approach, but instead of template strings, I used the <template> HTML tag because the code in this case is more readable than template strings - ``. 
 - First time working with Drag and Drop API.
-
+#
 ***Used technologies:***
 - TypeScript (using Classes and Local Storage)
 - SCSS/SASS
